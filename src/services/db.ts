@@ -494,5 +494,48 @@ export const guestService = {
 
     saveGuestsToStore(guests);
     return delay(guest);
+  },
+
+  async updateGuestStatusAndMethod(
+    guestId: string,
+    status: Guest['statusUndangan'],
+    metode: Guest['metodeKehadiran']
+  ): Promise<Guest> {
+    const guests = getGuestsFromStore();
+    const guest = guests.find((g) => g.id === guestId);
+
+    if (!guest) {
+      throw new Error('Tamu tidak ditemukan.');
+    }
+
+    guest.statusUndangan = status;
+    guest.metodeKehadiran = metode;
+
+    if (status === 'hadir') {
+      if (!guest.waktuCheckIn) {
+        guest.waktuCheckIn = new Date().toISOString();
+      }
+      if (!guest.waktuKonfirmasi) {
+        guest.waktuKonfirmasi = guest.waktuCheckIn;
+      }
+    } else if (status === 'dikonfirmasi') {
+      guest.waktuCheckIn = undefined;
+      if (!guest.waktuKonfirmasi) {
+        guest.waktuKonfirmasi = new Date().toISOString();
+      }
+    } else if (status === 'diundang') {
+      guest.waktuCheckIn = undefined;
+      guest.waktuKonfirmasi = undefined;
+      guest.metodeKehadiran = null;
+    } else if (status === 'tidak_hadir') {
+      guest.waktuCheckIn = undefined;
+      guest.metodeKehadiran = null;
+      if (!guest.waktuKonfirmasi) {
+        guest.waktuKonfirmasi = new Date().toISOString();
+      }
+    }
+
+    saveGuestsToStore(guests);
+    return delay(guest);
   }
 };

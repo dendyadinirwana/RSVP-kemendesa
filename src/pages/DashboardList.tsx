@@ -180,7 +180,7 @@ export const DashboardList: React.FC = () => {
 
         {/* Event List */}
         {events.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6">
             {events.map((evt) => {
               const eventGuests = guests[evt.id] || [];
               const totalInvited = eventGuests.length;

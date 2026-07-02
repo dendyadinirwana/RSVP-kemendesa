@@ -26,6 +26,12 @@ interface RSVPState {
   checkInGuest: (eventId: string, guestId: string, metodeOverride?: 'daring' | 'luring') => Promise<void>;
   autoCheckInDaring: (eventId: string, guestId: string) => Promise<void>;
   updateGuestMethod: (eventId: string, guestId: string, metode: 'daring' | 'luring' | null) => Promise<void>;
+  updateGuestStatusAndMethod: (
+    eventId: string,
+    guestId: string,
+    status: Guest['statusUndangan'],
+    metode: Guest['metodeKehadiran']
+  ) => Promise<void>;
   resetDatabase: () => Promise<void>;
 }
 
@@ -234,6 +240,31 @@ export const useRSVPStore = create<RSVPState>((set, get) => ({
       });
     } catch (err: any) {
       set({ error: err.message || 'Gagal mengubah metode kehadiran', isLoading: false });
+    }
+  },
+
+  updateGuestStatusAndMethod: async (
+    eventId: string,
+    guestId: string,
+    status: Guest['statusUndangan'],
+    metode: Guest['metodeKehadiran']
+  ) => {
+    set({ isLoading: true, error: null });
+    try {
+      const updatedGuest = await guestService.updateGuestStatusAndMethod(guestId, status, metode);
+      set((state) => {
+        const currentList = state.guests[eventId] || [];
+        const updatedList = currentList.map((g) => (g.id === guestId ? updatedGuest : g));
+        return {
+          guests: {
+            ...state.guests,
+            [eventId]: updatedList,
+          },
+          isLoading: false,
+        };
+      });
+    } catch (err: any) {
+      set({ error: err.message || 'Gagal mengubah status tamu', isLoading: false });
     }
   },
 
