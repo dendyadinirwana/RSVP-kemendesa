@@ -272,10 +272,10 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
       >
         {/* Column Header */}
         <div className="flex items-center justify-between mb-3 border-b border-slate-200/80 pb-2">
-          <span className="text-sm font-semibold text-slate-700 font-sans">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">
             {colTitle}
           </span>
-          <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-white border border-slate-200 text-slate-500 font-sans">
+          <span className="px-2 py-0.5 rounded-full text-[9px] font-mono font-bold bg-white border border-slate-200/80 text-slate-500">
             {colGuests.length}
           </span>
         </div>
@@ -283,8 +283,8 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
         {/* Column Body Cards */}
         <div className="flex flex-col gap-2.5 overflow-y-auto max-h-[500px] flex-1">
           {colGuests.length === 0 ? (
-            <div className="flex-1 flex items-center justify-center text-xs text-slate-400 font-sans py-10 border border-dashed border-slate-200 rounded-lg">
-              Seret tamu ke sini
+            <div className="flex-1 flex items-center justify-center text-[9px] text-slate-450 font-mono py-10 border border-dashed border-slate-200 rounded-lg">
+              DRAG TAMU KE SINI
             </div>
           ) : (
             colGuests.map((g) => (
@@ -308,11 +308,11 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
 
                 {/* Card Footer */}
                 <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[9px]">
-                  <span className="font-sans text-slate-400">
+                  <span className="font-mono text-slate-400 uppercase">
                     {g.metodeKehadiran ? (
                       <Badge
                         variant={g.metodeKehadiran === 'luring' ? 'purple' : 'cyan'}
-                        className="text-[10px] px-1.5 py-0"
+                        className="text-[9px] px-1 py-0 scale-90 origin-left"
                       >
                         {g.metodeKehadiran}
                       </Badge>
@@ -321,7 +321,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
                     )}
                   </span>
                   {g.waktuCheckIn && (
-                    <span className="text-slate-400 font-sans text-[10px]">
+                    <span className="text-slate-400 font-mono">
                       {new Date(g.waktuCheckIn).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   )}
@@ -338,7 +338,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-slate-900 mb-4"></div>
-        <p className="text-sm text-slate-500 font-sans">Memuat data dashboard...</p>
+        <p className="text-sm text-slate-500 font-mono">MEMUAT DATA DASHBOARD...</p>
       </div>
     );
   }
@@ -352,7 +352,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
         <div className="mb-4 no-print flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <Link
             to="/dashboard"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors font-sans"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider"
           >
             <ArrowLeft className="h-3 w-3" />
             Kembali
@@ -377,17 +377,17 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
         <header className="bg-white border border-slate-200 rounded p-6 mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 print:border-none print:p-0 print:mb-6">
           <div className="space-y-2 max-w-2xl">
             <div className="flex items-center gap-2 print:hidden">
-              {currentEvent.jenisRapat !== 'luring' && (
-                <Badge
-                  variant={
-                    currentEvent.jenisRapat === 'hybrid'
-                      ? 'purple'
-                      : 'cyan'
-                  }
-                >
-                  Rapat {currentEvent.jenisRapat}
-                </Badge>
-              )}
+              <Badge
+                variant={
+                  currentEvent.jenisRapat === 'hybrid'
+                    ? 'purple'
+                    : currentEvent.jenisRapat === 'daring'
+                    ? 'cyan'
+                    : 'warning'
+                }
+              >
+                Rapat {currentEvent.jenisRapat}
+              </Badge>
             </div>
             <h1 className="text-xl font-bold tracking-tight text-slate-900 leading-tight">
               {currentEvent.namaKegiatan}
@@ -404,7 +404,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
               {currentEvent.lokasi.urlOnline && (
                 <div className="flex items-center gap-2">
                   <Video className="h-3.5 w-3.5 flex-shrink-0 text-slate-400" />
-                  <span className="text-blue-600 font-sans text-xs select-all truncate">
+                  <span className="text-blue-600 font-mono text-[11px] select-all truncate">
                     {currentEvent.lokasi.urlOnline}
                   </span>
                 </div>
@@ -467,10 +467,10 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
               <Users className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
             <div>
-              <span className="text-xs font-semibold text-slate-500 block font-sans">
+              <span className="text-[9px] sm:text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
                 Total Diundang
               </span>
-              <span className="text-lg sm:text-2xl font-bold text-slate-900 font-sans">
+              <span className="text-lg sm:text-2xl font-bold text-slate-900 font-mono">
                 {totalInvited}
               </span>
               <span className="text-[10px] sm:text-xs text-slate-400 hidden sm:block mt-0.5">Daftar tamu awal</span>
@@ -483,10 +483,10 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
               <CheckSquare className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
             <div>
-              <span className="text-xs font-semibold text-slate-500 block font-sans">
+              <span className="text-[9px] sm:text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
                 Konfirmasi
               </span>
-              <span className="text-lg sm:text-2xl font-bold text-blue-600 font-sans">
+              <span className="text-lg sm:text-2xl font-bold text-blue-600 font-mono">
                 {totalConfirmed}
               </span>
               <span className="text-[10px] sm:text-xs text-slate-400 hidden sm:block mt-0.5">
@@ -501,10 +501,10 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
               <UserCheck className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
             <div>
-              <span className="text-xs font-semibold text-slate-500 block font-sans">
+              <span className="text-[9px] sm:text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
                 Check-In
               </span>
-              <span className="text-lg sm:text-2xl font-bold text-emerald-600 font-sans">
+              <span className="text-lg sm:text-2xl font-bold text-emerald-600 font-mono">
                 {totalAttended}
               </span>
               <span className="text-[10px] sm:text-xs text-slate-400 hidden sm:block mt-0.5">
@@ -521,7 +521,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
           {/* Method Attendance Breakdown */}
           <Card className="lg:col-span-1 flex flex-col justify-between print:hidden">
             <div>
-              <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-100 pb-3 mb-4 font-sans">
+              <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-wider border-b border-slate-100 pb-3 mb-4 font-mono">
                 Metode Kehadiran (RSVP)
               </h2>
               
@@ -530,7 +530,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
                 <div>
                   <div className="flex justify-between items-center text-xs mb-1 font-semibold">
                     <span className="text-slate-600">Tamu Luring (Fisik)</span>
-                    <span className="font-sans text-slate-900">{totalLuring} Tamu</span>
+                    <span className="font-mono text-slate-900">{totalLuring} Tamu</span>
                   </div>
                   <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                     <div
@@ -546,7 +546,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
                 <div>
                   <div className="flex justify-between items-center text-xs mb-1 font-semibold">
                     <span className="text-slate-650">Tamu Daring (Online)</span>
-                    <span className="font-sans text-slate-900">{totalDaring} Tamu</span>
+                    <span className="font-mono text-slate-900">{totalDaring} Tamu</span>
                   </div>
                   <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
                     <div
@@ -570,13 +570,13 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
             {/* Search and Filters (no-print) */}
             <div className="no-print space-y-4 mb-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-3 gap-3">
-                <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5 font-sans">
+                <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5 font-mono">
                   <SlidersHorizontal className="h-3.5 w-3.5" />
                   Daftar Tamu Undangan
                 </h2>
                 
                 <div className="flex items-center gap-3">
-                  <div className="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200 text-xs font-sans">
+                  <div className="flex bg-slate-100 p-0.5 rounded-lg border border-slate-200/80 text-[10px] uppercase font-mono">
                     <button
                       type="button"
                       onClick={() => setViewMode('table')}
@@ -600,7 +600,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
                       Kanban
                     </button>
                   </div>
-                  <span className="text-xs font-sans text-slate-500">
+                  <span className="text-xs font-mono text-slate-400">
                     Ditemukan {filteredGuests.length} dari {totalInvited}
                   </span>
                 </div>
@@ -684,7 +684,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
                             </td>
 
                             {/* Column 2: Status */}
-                            <td className="px-6 py-3.5 capitalize font-sans text-xs">
+                            <td className="px-6 py-3.5 capitalize font-mono text-xs">
                               <Badge
                                 variant={
                                   guest.statusUndangan === 'hadir'
@@ -699,7 +699,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
                             </td>
 
                             {/* Column 3: Metode */}
-                            <td className="px-6 py-3.5 capitalize font-sans text-xs">
+                            <td className="px-6 py-3.5 capitalize font-mono text-xs">
                               {currentEvent.jenisRapat === 'hybrid' ? (
                                 <select
                                   value={guest.metodeKehadiran || ''}
@@ -707,7 +707,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
                                     const val = e.target.value ? (e.target.value as 'daring' | 'luring') : null;
                                     updateGuestMethod(currentEvent.id, guest.id, val);
                                   }}
-                                  className={`bg-slate-50 border border-slate-200 text-xs font-medium rounded-md px-2 py-0.5 text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:border-slate-900 cursor-pointer font-sans ${
+                                  className={`bg-slate-50 border border-slate-200 text-[11px] font-mono font-semibold rounded px-2 py-0.5 uppercase tracking-wider text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:border-slate-900 cursor-pointer ${
                                     guest.metodeKehadiran === 'luring'
                                       ? 'bg-purple-50 text-purple-700 border-purple-200'
                                       : guest.metodeKehadiran === 'daring'
@@ -733,7 +733,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
                             </td>
 
                             {/* Column 4: Konfirmasi */}
-                            <td className="px-6 py-3.5 font-sans text-xs w-40 text-slate-500">
+                            <td className="px-6 py-3.5 font-mono text-xs w-40 text-slate-500">
                               {formattedTime}
                             </td>
                           </tr>
@@ -769,7 +769,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
                             <div className="text-xs text-slate-500">
                               {guest.jabatan} — {guest.instansi}
                             </div>
-                            <div className="hidden print:block text-[10px] text-slate-400 font-sans mt-0.5">
+                            <div className="hidden print:block text-[10px] text-slate-400 font-mono mt-0.5">
                               {guest.waktuCheckIn
                                 ? `Check-in: ${new Date(guest.waktuCheckIn).toLocaleTimeString('id-ID')}`
                                 : ''}
@@ -777,7 +777,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
                           </td>
 
                           {/* Column 2: Status */}
-                          <td className="px-6 py-3.5 print:py-2 capitalize font-sans text-xs">
+                          <td className="px-6 py-3.5 print:py-2 capitalize font-mono text-xs">
                             <Badge
                               variant={
                                 guest.statusUndangan === 'hadir'
@@ -792,7 +792,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
                           </td>
 
                           {/* Column 3: Metode */}
-                          <td className="px-6 py-3.5 print:py-2 capitalize font-sans text-xs">
+                          <td className="px-6 py-3.5 print:py-2 capitalize font-mono text-xs">
                             {guest.metodeKehadiran ? (
                               <Badge variant={guest.metodeKehadiran === 'luring' ? 'purple' : 'cyan'}>
                                 {guest.metodeKehadiran}
@@ -803,15 +803,15 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
                           </td>
 
                           {/* Column 4: Signature */}
-                          <td className="px-6 py-3.5 print:py-2 font-sans text-xs w-40">
+                          <td className="px-6 py-3.5 print:py-2 font-mono text-xs w-40">
                             <div className="text-slate-800 text-[11px] font-sans">
                               {guest.metodeKehadiran === 'daring' ? (
-                                <span className="text-[10px] font-semibold text-slate-400 font-sans">
-                                  Daring (Online)
+                                <span className="text-[10px] uppercase font-semibold text-slate-400 font-mono">
+                                  [DARING ONLINE]
                                 </span>
                               ) : (
                                 <div className="flex items-center gap-2">
-                                  <span className="text-[10px] text-slate-350 font-sans mr-2">{index + 1}.</span>
+                                  <span className="text-[10px] text-slate-300 font-mono mr-2">{index + 1}.</span>
                                   <div className="border-b border-slate-300 w-24 h-5"></div>
                                 </div>
                               )}
@@ -831,13 +831,13 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
         {promptGuest && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs no-print">
             <div className="bg-white border border-slate-200 rounded max-w-sm w-full p-6 shadow-xs relative">
-              <h2 className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-1 font-sans">
-                Pilih Metode Kehadiran
+              <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">
+                PILIH METODE KEHADIRAN
               </h2>
-              <h3 className="text-sm font-bold text-slate-900 mb-2 leading-tight font-sans">
+              <h3 className="text-sm font-bold text-slate-900 mb-2 leading-tight">
                 {promptGuest.nama}
               </h3>
-              <p className="text-xs text-slate-500 mb-6 leading-relaxed font-sans">
+              <p className="text-xs text-slate-500 mb-6 leading-relaxed">
                 Silakan pilih metode kehadiran untuk tamu ini karena rapat bersifat hybrid.
               </p>
 
@@ -849,7 +849,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
                     setTargetDropStatus(null);
                   }}
                   variant="primary"
-                  className="bg-purple-600 hover:bg-purple-700 border-purple-600 text-sm font-semibold py-2 font-sans"
+                  className="bg-purple-600 hover:bg-purple-700 border-purple-600 text-xs py-2.5 font-bold uppercase tracking-wider"
                 >
                   Luring (Fisik)
                 </Button>
@@ -860,7 +860,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
                     setTargetDropStatus(null);
                   }}
                   variant="primary"
-                  className="bg-cyan-600 hover:bg-cyan-700 border-cyan-600 text-sm font-semibold py-2 font-sans"
+                  className="bg-cyan-600 hover:bg-cyan-700 border-cyan-600 text-xs py-2.5 font-bold uppercase tracking-wider"
                 >
                   Daring (Online)
                 </Button>

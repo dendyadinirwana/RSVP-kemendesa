@@ -97,7 +97,7 @@ export const PublicRSVP: React.FC = () => {
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-slate-900 mb-4"></div>
-        <p className="text-sm text-slate-500 font-mono">MEMUAT FORM RSVP...</p>
+        <p className="text-sm text-slate-500 font-sans">Memuat form RSVP...</p>
       </div>
     );
   }
@@ -115,17 +115,17 @@ export const PublicRSVP: React.FC = () => {
             <h1 className="text-base font-bold text-slate-900 leading-tight">
               {currentEvent.namaKegiatan}
             </h1>
-            <Badge
-              variant={
-                currentEvent.jenisRapat === 'hybrid'
-                  ? 'purple'
-                  : currentEvent.jenisRapat === 'daring'
-                  ? 'cyan'
-                  : 'warning'
-              }
-            >
-              {currentEvent.jenisRapat}
-            </Badge>
+            {currentEvent.jenisRapat !== 'luring' && (
+              <Badge
+                variant={
+                  currentEvent.jenisRapat === 'hybrid'
+                    ? 'purple'
+                    : 'cyan'
+                }
+              >
+                {currentEvent.jenisRapat}
+              </Badge>
+            )}
           </div>
 
           <div className="space-y-2 text-xs text-slate-500 font-sans border-t border-slate-100 pt-4 mt-2">
@@ -140,7 +140,7 @@ export const PublicRSVP: React.FC = () => {
             {currentEvent.lokasi.urlOnline && (
               <div className="flex items-center gap-2">
                 <Video className="h-4 w-4 text-slate-400 flex-shrink-0" />
-                <span className="truncate text-slate-500 font-mono text-[11px]">
+                <span className="truncate text-slate-500 font-sans text-xs">
                   Rapat daring tersedia
                 </span>
               </div>
@@ -151,7 +151,7 @@ export const PublicRSVP: React.FC = () => {
         {/* RSVP Form */}
         <Card className="bg-white">
           <div className="border-b border-slate-100 pb-3 mb-5">
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+            <h3 className="text-sm font-bold text-slate-900 font-sans">
               Form Konfirmasi Kehadiran
             </h3>
             <p className="text-xs text-slate-400 mt-1">
@@ -194,16 +194,16 @@ export const PublicRSVP: React.FC = () => {
             />
 
             {/* Kehadiran Switch */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block">
+            <div className="space-y-1.5 font-sans">
+              <label className="text-sm font-medium text-slate-700 block">
                 Konfirmasi Kehadiran
               </label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 gap-3 font-sans">
                 <button
                   key="hadir-ya"
                   type="button"
                   onClick={() => setApakahHadir('ya')}
-                  className={`py-2 px-3 text-xs font-semibold rounded border transition-colors ${
+                  className={`py-2 px-3 text-sm font-medium rounded-lg border transition-colors ${
                     apakahHadir === 'ya'
                       ? 'bg-slate-900 border-slate-900 text-white'
                       : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
@@ -215,7 +215,7 @@ export const PublicRSVP: React.FC = () => {
                   key="hadir-tidak"
                   type="button"
                   onClick={() => setApakahHadir('tidak')}
-                  className={`py-2 px-3 text-xs font-semibold rounded border transition-colors ${
+                  className={`py-2 px-3 text-sm font-medium rounded-lg border transition-colors ${
                     apakahHadir === 'tidak'
                       ? 'bg-slate-900 border-slate-900 text-white'
                       : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
@@ -229,24 +229,24 @@ export const PublicRSVP: React.FC = () => {
             {/* Attendance Method Selection */}
             {apakahHadir === 'ya' && (
               currentEvent.jenisRapat === 'hybrid' ? (
-                <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block">
+                <div className="space-y-1.5 font-sans">
+                  <label className="text-sm font-medium text-slate-700 block">
                     Metode Kehadiran
                   </label>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-3 font-sans">
                     {showLuringOption && (
                       <button
                         key="method-luring"
                         type="button"
                         onClick={() => setMetodeKehadiran('luring')}
-                        className={`py-3 px-4 text-xs font-semibold rounded border transition-colors flex flex-col items-center gap-1 ${
+                        className={`py-3 px-4 text-sm font-medium rounded-lg border transition-colors flex flex-col items-center gap-1 ${
                           metodeKehadiran === 'luring'
                             ? 'bg-slate-900 border-slate-900 text-white'
                             : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                         }`}
                       >
-                        <span className="font-bold">Luring (Fisik)</span>
-                        <span className={`text-[9px] ${metodeKehadiran === 'luring' ? 'text-slate-300' : 'text-slate-400'}`}>
+                        <span className="font-semibold">Luring (Fisik)</span>
+                        <span className={`text-[10px] ${metodeKehadiran === 'luring' ? 'text-slate-300' : 'text-slate-400'}`}>
                           Hadir di lokasi acara
                         </span>
                       </button>
@@ -257,14 +257,14 @@ export const PublicRSVP: React.FC = () => {
                         key="method-daring"
                         type="button"
                         onClick={() => setMetodeKehadiran('daring')}
-                        className={`py-3 px-4 text-xs font-semibold rounded border transition-colors flex flex-col items-center gap-1 ${
+                        className={`py-3 px-4 text-sm font-medium rounded-lg border transition-colors flex flex-col items-center gap-1 ${
                           metodeKehadiran === 'daring'
                             ? 'bg-slate-900 border-slate-900 text-white'
-                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                            : 'bg-white border-slate-200 text-slate-705 hover:bg-slate-50'
                         }`}
                       >
-                        <span className="font-bold">Daring (Online)</span>
-                        <span className={`text-[9px] ${metodeKehadiran === 'daring' ? 'text-slate-300' : 'text-slate-400'}`}>
+                        <span className="font-semibold">Daring (Online)</span>
+                        <span className={`text-[10px] ${metodeKehadiran === 'daring' ? 'text-slate-300' : 'text-slate-400'}`}>
                           Hadir via Video Meeting
                         </span>
                       </button>
@@ -273,8 +273,8 @@ export const PublicRSVP: React.FC = () => {
                 </div>
               ) : (
                 // If not hybrid, method is auto-selected, show it as read-only badge/label
-                <div className="bg-slate-50 p-3 rounded border border-slate-100">
-                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+                <div className="bg-slate-50 p-3 rounded border border-slate-100 font-sans">
+                  <span className="text-xs font-semibold text-slate-500 block mb-1 font-sans">
                     Metode Kehadiran (Otomatis)
                   </span>
                   <span className="text-xs font-bold text-slate-800 capitalize flex items-center gap-1.5">
@@ -285,7 +285,7 @@ export const PublicRSVP: React.FC = () => {
               )
             )}
 
-            <Button type="submit" className="w-full py-2.5 font-bold uppercase tracking-wider" isLoading={isLoading}>
+            <Button type="submit" className="w-full py-2.5 text-sm font-semibold tracking-wide font-sans" isLoading={isLoading}>
               Kirim Konfirmasi RSVP
             </Button>
           </form>

@@ -86,7 +86,7 @@ Terima kasih.`;
     return (
       <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-slate-900 mb-4"></div>
-        <p className="text-sm text-slate-500 font-mono">MEMUAT HALAMAN KONFIRMASI...</p>
+        <p className="text-sm text-slate-500 font-sans">Memuat halaman konfirmasi...</p>
       </div>
     );
   }
@@ -126,7 +126,7 @@ Terima kasih.`;
         {/* Confirmation Summary Card */}
         <Card className="bg-white">
           <div className="border-b border-slate-100 pb-3 mb-4">
-            <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+            <span className="text-xs font-semibold text-slate-500 block mb-1 font-sans">
               Ringkasan Konfirmasi
             </span>
             <h3 className="text-sm font-bold text-slate-900">Detail Tamu</h3>
@@ -150,7 +150,7 @@ Terima kasih.`;
 
             <div className="grid grid-cols-3 gap-2 border-b border-slate-50 pb-2">
               <span className="text-slate-400 font-medium">Metode Kehadiran</span>
-              <span className="col-span-2 font-mono">
+              <span className="col-span-2 font-sans">
                 <Badge variant={guest.metodeKehadiran === 'luring' ? 'purple' : 'cyan'}>
                   {guest.metodeKehadiran}
                 </Badge>
@@ -159,7 +159,7 @@ Terima kasih.`;
 
             <div className="grid grid-cols-3 gap-2 pb-1">
               <span className="text-slate-400 font-medium">Waktu Konfirmasi</span>
-              <span className="col-span-2 text-slate-500 font-mono">
+              <span className="col-span-2 text-slate-500 font-sans">
                 {new Date(guest.waktuKonfirmasi).toLocaleDateString('id-ID', {
                   day: 'numeric',
                   month: 'short',
@@ -174,17 +174,17 @@ Terima kasih.`;
         {/* Meeting Joiner (Auto Checkin Trigger for Online Guests) */}
         {guest.metodeKehadiran === 'daring' && currentEvent.lokasi.urlOnline && (
           <Card className="bg-blue-50/50 border border-blue-200">
-            <h3 className="text-xs font-bold text-blue-900 uppercase tracking-wider mb-2 flex items-center gap-1">
+            <h3 className="text-sm font-bold text-blue-900 mb-2 flex items-center gap-1 font-sans">
               <Video className="h-4 w-4" />
               Gabung Rapat Online
             </h3>
             
-            <p className="text-[11px] text-blue-700 leading-relaxed mb-4">
+            <p className="text-xs text-blue-700 leading-relaxed mb-4 font-sans">
               Silakan klik tombol di bawah untuk bergabung ke video meeting. Sistem akan menandai kehadiran Anda secara otomatis saat tautan diklik.
             </p>
 
             {autoCheckedIn ? (
-              <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] p-2.5 rounded mb-3 flex items-center gap-1.5 font-semibold">
+              <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs p-2.5 rounded mb-3 flex items-center gap-1.5 font-semibold font-sans">
                 <ClipboardCheck className="h-4 w-4" />
                 Presensi terverifikasi otomatis (Hadir)
               </div>
@@ -193,7 +193,7 @@ Terima kasih.`;
             <Button
               onClick={handleJoinOnlineMeeting}
               variant="primary"
-              className="w-full text-xs py-2 inline-flex items-center justify-center gap-1.5 bg-blue-700 hover:bg-blue-800 text-white border-blue-700"
+              className="w-full inline-flex items-center justify-center gap-1.5 bg-blue-700 hover:bg-blue-800 text-white border-blue-700 font-sans"
             >
               Gabung Rapat Sekarang
               <ExternalLink className="h-3 w-3" />
@@ -206,7 +206,7 @@ Terima kasih.`;
           <Button
             onClick={handleDownloadCalendar}
             variant="outline"
-            className="w-full inline-flex items-center justify-center gap-1.5 text-xs py-2.5 border-slate-300"
+            className="w-full inline-flex items-center justify-center gap-1.5 border-slate-350 font-sans"
           >
             <Calendar className="h-4 w-4" />
             Tambah ke Kalender (.ics)
@@ -220,7 +220,7 @@ Terima kasih.`;
           >
             <Button
               variant="secondary"
-              className="w-full inline-flex items-center justify-center gap-1.5 text-xs py-2.5 border border-slate-200"
+              className="w-full inline-flex items-center justify-center gap-1.5 border border-slate-200 font-sans"
             >
               <Share2 className="h-4 w-4" />
               Bagikan Konfirmasi ke WA
@@ -232,7 +232,7 @@ Terima kasih.`;
         <div className="text-center">
           <Link
             to={`/rsvp/${eventId}`}
-            className="text-[11px] font-semibold text-slate-500 hover:text-slate-800 transition-colors uppercase tracking-wider inline-flex items-center gap-0.5"
+            className="text-xs font-semibold text-slate-550 hover:text-slate-800 transition-colors inline-flex items-center gap-0.5 font-sans"
           >
             Kembali ke Form
             <ChevronRight className="h-3 w-3" />

@@ -65,7 +65,7 @@ export const CheckIn: React.FC = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-slate-900 mb-4"></div>
-        <p className="text-xs text-slate-450 font-mono">MEMUAT HALAMAN CHECK-IN...</p>
+        <p className="text-sm text-slate-500 font-sans">Memuat halaman check-in...</p>
       </div>
     );
   }
@@ -83,7 +83,7 @@ export const CheckIn: React.FC = () => {
         <div className="mb-4">
           <Link
             to={`/dashboard/${eventId}`}
-            className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-widest font-mono"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors font-sans"
           >
             <ArrowLeft className="h-3 w-3" />
             Kembali ke Dashboard Kegiatan
@@ -93,9 +93,9 @@ export const CheckIn: React.FC = () => {
         {/* Header Event Card */}
         <div className="bg-white border border-slate-200 rounded-lg shadow-xs p-6 mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <div className="flex items-center gap-1.5 mb-1 text-slate-400">
+            <div className="flex items-center gap-1.5 mb-1 text-slate-400 font-sans">
               <UserCheck className="h-4 w-4" />
-              <span className="text-[9px] font-semibold uppercase tracking-widest font-mono">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 font-sans">
                 Registrasi & Presensi Hari-H
               </span>
             </div>
@@ -108,18 +108,18 @@ export const CheckIn: React.FC = () => {
           {/* Mini Dashboard Tracker */}
           <div className="flex gap-4 bg-slate-50/40 border border-slate-200/60 p-3 rounded-lg text-center">
             <div>
-              <span className="text-[8px] uppercase font-bold text-slate-400 font-mono tracking-wider block">Diundang</span>
-              <span className="text-base font-bold text-slate-700 font-mono">{totalGuests}</span>
+              <span className="text-xs font-semibold text-slate-400 font-sans block">Diundang</span>
+              <span className="text-base font-bold text-slate-700 font-sans">{totalGuests}</span>
             </div>
             <div className="border-r border-slate-200 h-8 self-center"></div>
             <div>
-              <span className="text-[8px] uppercase font-bold text-slate-400 font-mono tracking-wider block">Hadir</span>
-              <span className="text-base font-bold text-emerald-600 font-mono">{totalCheckedIn}</span>
+              <span className="text-xs font-semibold text-slate-400 font-sans block">Hadir</span>
+              <span className="text-base font-bold text-emerald-600 font-sans">{totalCheckedIn}</span>
             </div>
             <div className="border-r border-slate-200 h-8 self-center"></div>
             <div>
-              <span className="text-[8px] uppercase font-bold text-slate-400 font-mono tracking-wider block">Sisa</span>
-              <span className="text-base font-bold text-amber-600 font-mono">{pendingCheckIn}</span>
+              <span className="text-xs font-semibold text-slate-400 font-sans block">Sisa</span>
+              <span className="text-base font-bold text-amber-600 font-sans">{pendingCheckIn}</span>
             </div>
           </div>
         </div>
@@ -127,7 +127,7 @@ export const CheckIn: React.FC = () => {
         {/* Central UI */}
         <div className="bg-white border border-slate-200 rounded-lg shadow-xs p-6">
           <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-6">
-            <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">
+            <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider font-sans">
               Pencarian & Registrasi Cepat
             </h2>
             {successMsg && (
@@ -192,7 +192,7 @@ export const CheckIn: React.FC = () => {
                             <div className="flex items-center gap-1 text-emerald-700 font-semibold text-xs">
                               <CheckCircle className="h-4 w-4" />
                               <span>Hadir</span>
-                              <span className="text-[10px] font-mono text-slate-400 font-normal">
+                              <span className="text-[10px] font-sans text-slate-400 font-normal">
                                 ({formatTime(guest.waktuCheckIn)})
                               </span>
                             </div>
@@ -266,10 +266,10 @@ export const CheckIn: React.FC = () => {
                           <div className="font-semibold text-sm text-slate-900 leading-tight">
                             {guest.nama}
                           </div>
-                          <div className="text-[11px] text-slate-500 mt-0.5 truncate">
+                          <div className="text-xs text-slate-500 mt-0.5 truncate font-sans">
                             {guest.jabatan}
                           </div>
-                          <div className="text-[11px] text-slate-400 truncate">
+                          <div className="text-xs text-slate-400 truncate font-sans">
                             {guest.instansi}
                           </div>
                         </div>
@@ -279,7 +279,7 @@ export const CheckIn: React.FC = () => {
                           {guest.metodeKehadiran && (
                             <Badge
                               variant={guest.metodeKehadiran === 'luring' ? 'purple' : 'cyan'}
-                              className="text-[9px]"
+                              className="text-xs"
                             >
                               {guest.metodeKehadiran}
                             </Badge>
