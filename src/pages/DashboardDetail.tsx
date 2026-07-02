@@ -349,25 +349,25 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
       <div className="max-w-6xl mx-auto print-container">
         
         {/* Navigation Breadcrumb (no-print) */}
-        <div className="mb-4 no-print flex items-center justify-between">
+        <div className="mb-4 no-print flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <Link
             to="/dashboard"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider"
           >
             <ArrowLeft className="h-3 w-3" />
-            Kembali ke Daftar Kegiatan
+            Kembali
           </Link>
           <div className="flex gap-2">
-            <Link to={`/dashboard/${eventId}/guests`}>
-              <Button variant="secondary" size="sm" className="text-xs flex items-center gap-1">
+            <Link to={`/dashboard/${eventId}/guests`} className="flex-1 sm:flex-initial">
+              <Button variant="secondary" size="sm" className="w-full text-xs flex items-center justify-center gap-1">
                 <PlusSquare className="h-3.5 w-3.5" />
-                Kelola Tamu
+                <span className="hidden sm:inline">Kelola</span> Tamu
               </Button>
             </Link>
-            <Link to={`/checkin/${eventId}`}>
-              <Button variant="outline" size="sm" className="text-xs flex items-center gap-1 border-slate-300">
+            <Link to={`/checkin/${eventId}`} className="flex-1 sm:flex-initial">
+              <Button variant="outline" size="sm" className="w-full text-xs flex items-center justify-center gap-1 border-slate-300">
                 <UserCheck className="h-3.5 w-3.5" />
-                Check-In Tamu
+                Check-In
               </Button>
             </Link>
           </div>
@@ -460,54 +460,54 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
         </div>
 
         {/* Summary Stats Cards */}
-        <section className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 print:hidden">
+        <section className="grid grid-cols-3 gap-3 sm:gap-6 mb-8 print:hidden">
           {/* Card 1 */}
-          <Card className="flex items-center gap-4 bg-white">
-            <div className="p-3 bg-slate-100 rounded text-slate-700">
-              <Users className="h-5 w-5" />
+          <Card className="flex items-center gap-3 sm:gap-4 bg-white">
+            <div className="p-2 sm:p-3 bg-slate-100 rounded text-slate-700">
+              <Users className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
             <div>
-              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+              <span className="text-[9px] sm:text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
                 Total Diundang
               </span>
-              <span className="text-2xl font-bold text-slate-900 font-mono">
+              <span className="text-lg sm:text-2xl font-bold text-slate-900 font-mono">
                 {totalInvited}
               </span>
-              <span className="text-xs text-slate-400 block mt-0.5">Daftar tamu awal</span>
+              <span className="text-[10px] sm:text-xs text-slate-400 hidden sm:block mt-0.5">Daftar tamu awal</span>
             </div>
           </Card>
 
           {/* Card 2 */}
-          <Card className="flex items-center gap-4 bg-white">
-            <div className="p-3 bg-blue-50 text-blue-700 rounded border border-blue-100">
-              <CheckSquare className="h-5 w-5" />
+          <Card className="flex items-center gap-3 sm:gap-4 bg-white">
+            <div className="p-2 sm:p-3 bg-blue-50 text-blue-700 rounded border border-blue-100">
+              <CheckSquare className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
             <div>
-              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
-                Total Konfirmasi
+              <span className="text-[9px] sm:text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+                Konfirmasi
               </span>
-              <span className="text-2xl font-bold text-blue-600 font-mono">
+              <span className="text-lg sm:text-2xl font-bold text-blue-600 font-mono">
                 {totalConfirmed}
               </span>
-              <span className="text-xs text-slate-400 block mt-0.5">
+              <span className="text-[10px] sm:text-xs text-slate-400 hidden sm:block mt-0.5">
                 {totalInvited > 0 ? Math.round((totalConfirmed / totalInvited) * 100) : 0}% Tingkat RSVP
               </span>
             </div>
           </Card>
 
           {/* Card 3 */}
-          <Card className="flex items-center gap-4 bg-white">
-            <div className="p-3 bg-emerald-50 text-emerald-700 rounded border border-emerald-100">
-              <UserCheck className="h-5 w-5" />
+          <Card className="flex items-center gap-3 sm:gap-4 bg-white">
+            <div className="p-2 sm:p-3 bg-emerald-50 text-emerald-700 rounded border border-emerald-100">
+              <UserCheck className="h-4 w-4 sm:h-5 sm:w-5" />
             </div>
             <div>
-              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
-                Telah Check-In (Hadir)
+              <span className="text-[9px] sm:text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+                Check-In
               </span>
-              <span className="text-2xl font-bold text-emerald-600 font-mono">
+              <span className="text-lg sm:text-2xl font-bold text-emerald-600 font-mono">
                 {totalAttended}
               </span>
-              <span className="text-xs text-slate-400 block mt-0.5">
+              <span className="text-[10px] sm:text-xs text-slate-400 hidden sm:block mt-0.5">
                 {totalConfirmed > 0 ? Math.round((totalAttended / totalConfirmed) * 100) : 0}% Dari konfirmasi
               </span>
             </div>
@@ -565,7 +565,7 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
           </div>
 
           {/* Guest Lists & Tables */}
-          <div className="lg:col-span-2 bg-white border border-slate-200 rounded p-6 print:border-none print:p-0">
+          <div className="lg:col-span-2 bg-white border border-slate-200 rounded p-4 sm:p-6 print:border-none print:p-0">
             {/* Search and Filters (no-print) */}
             <div className="no-print space-y-4 mb-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-3 gap-3">
@@ -740,12 +740,14 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
                       })}
                     </Table>
                   ) : (
-                    /* Kanban Columns */
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-2">
-                      {renderKanbanColumn('diundang', 'Menunggu Konfirmasi')}
-                      {renderKanbanColumn('dikonfirmasi', 'Dikonfirmasi')}
-                      {renderKanbanColumn('hadir', 'Hadir (Check-In)')}
-                      {renderKanbanColumn('tidak_hadir', 'Tidak Hadir')}
+                    /* Kanban Columns — horizontally scrollable on mobile */
+                    <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0 pb-2">
+                      <div className="grid grid-cols-4 gap-4 mt-2 min-w-[800px] md:min-w-0">
+                        {renderKanbanColumn('diundang', 'Menunggu')}
+                        {renderKanbanColumn('dikonfirmasi', 'Dikonfirmasi')}
+                        {renderKanbanColumn('hadir', 'Hadir')}
+                        {renderKanbanColumn('tidak_hadir', 'Tidak Hadir')}
+                      </div>
                     </div>
                   )}
                 </div>

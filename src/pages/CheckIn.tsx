@@ -152,95 +152,191 @@ export const CheckIn: React.FC = () => {
             />
           </div>
 
-          {/* Guest Checklist Table */}
+          {/* Guest Checklist */}
           {filteredGuests.length === 0 ? (
             <div className="text-center py-16 text-slate-400 text-xs">
               {search ? 'Tamu tidak ditemukan. Cek kembali ejaan nama atau instansinya.' : 'Belum ada tamu terdaftar. Silakan upload terlebih dahulu di panel kelola tamu.'}
             </div>
           ) : (
-            <Table headers={['Nama Tamu & Detail', 'Metode RSVP', 'Status Presensi', 'Aksi Registrasi']}>
-              {filteredGuests.map((guest) => {
-                const isHadir = guest.statusUndangan === 'hadir';
+            <>
+              {/* Desktop: Table View */}
+              <div className="hidden md:block">
+                <Table headers={['Nama Tamu & Detail', 'Metode RSVP', 'Status Presensi', 'Aksi Registrasi']}>
+                  {filteredGuests.map((guest) => {
+                    const isHadir = guest.statusUndangan === 'hadir';
 
-                return (
-                  <tr key={guest.id} className={`hover:bg-slate-50/20 ${isHadir ? 'bg-emerald-50/10' : ''}`}>
-                    {/* Name and title */}
-                    <td className="px-6 py-3.5">
-                      <div className="font-semibold text-slate-950">{guest.nama}</div>
-                      <div className="text-xs text-slate-500">
-                        {guest.jabatan} — {guest.instansi}
+                    return (
+                      <tr key={guest.id} className={`hover:bg-slate-50/20 ${isHadir ? 'bg-emerald-50/10' : ''}`}>
+                        {/* Name and title */}
+                        <td className="px-6 py-3.5">
+                          <div className="font-semibold text-slate-950">{guest.nama}</div>
+                          <div className="text-xs text-slate-500">
+                            {guest.jabatan} — {guest.instansi}
+                          </div>
+                        </td>
+
+                        {/* RSVP details */}
+                        <td className="px-6 py-3.5">
+                          {guest.metodeKehadiran ? (
+                            <Badge variant={guest.metodeKehadiran === 'luring' ? 'purple' : 'cyan'}>
+                              {guest.metodeKehadiran}
+                            </Badge>
+                          ) : (
+                            <span className="text-[11px] text-slate-400 italic">Belum Konfirmasi</span>
+                          )}
+                        </td>
+
+                        {/* Presensi / CheckIn Status */}
+                        <td className="px-6 py-3.5">
+                          {isHadir ? (
+                            <div className="flex items-center gap-1 text-emerald-700 font-semibold text-xs">
+                              <CheckCircle className="h-4 w-4" />
+                              <span>Hadir</span>
+                              <span className="text-[10px] font-mono text-slate-400 font-normal">
+                                ({formatTime(guest.waktuCheckIn)})
+                              </span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-1 text-slate-400 text-xs">
+                              <Clock className="h-4 w-4" />
+                              <span>Belum Hadir</span>
+                            </div>
+                          )}
+                        </td>
+
+                        {/* Action button */}
+                        <td className="px-6 py-3.5">
+                          {isHadir ? (
+                            <Button variant="secondary" size="sm" disabled className="text-xs">
+                              Sudah Registrasi
+                            </Button>
+                          ) : currentEvent.jenisRapat === 'hybrid' ? (
+                            <div className="flex gap-1.5">
+                              <Button
+                                onClick={() => handleCheckIn(guest.id, guest.nama, 'luring')}
+                                variant="primary"
+                                size="sm"
+                                className="text-xs bg-purple-600 hover:bg-purple-700 text-white border-purple-600 focus-visible:outline-purple-600"
+                              >
+                                Hadir Luring
+                              </Button>
+                              <Button
+                                onClick={() => handleCheckIn(guest.id, guest.nama, 'daring')}
+                                variant="primary"
+                                size="sm"
+                                className="text-xs bg-cyan-600 hover:bg-cyan-700 text-white border-cyan-600 focus-visible:outline-cyan-600"
+                              >
+                                Hadir Daring
+                              </Button>
+                            </div>
+                          ) : (
+                            <Button
+                              onClick={() => handleCheckIn(guest.id, guest.nama)}
+                              variant="primary"
+                              size="sm"
+                              className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white focus-visible:outline-emerald-600"
+                            >
+                              Tandai Hadir
+                            </Button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </Table>
+              </div>
+
+              {/* Mobile: Card View */}
+              <div className="md:hidden space-y-3">
+                {filteredGuests.map((guest) => {
+                  const isHadir = guest.statusUndangan === 'hadir';
+
+                  return (
+                    <div
+                      key={guest.id}
+                      className={`border rounded p-4 transition-colors ${
+                        isHadir
+                          ? 'bg-emerald-50/30 border-emerald-200'
+                          : 'bg-white border-slate-200'
+                      }`}
+                    >
+                      {/* Guest Info */}
+                      <div className="flex items-start justify-between gap-3 mb-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-sm text-slate-900 leading-tight">
+                            {guest.nama}
+                          </div>
+                          <div className="text-[11px] text-slate-500 mt-0.5 truncate">
+                            {guest.jabatan}
+                          </div>
+                          <div className="text-[11px] text-slate-400 truncate">
+                            {guest.instansi}
+                          </div>
+                        </div>
+
+                        {/* Status Indicator */}
+                        <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                          {guest.metodeKehadiran && (
+                            <Badge
+                              variant={guest.metodeKehadiran === 'luring' ? 'purple' : 'cyan'}
+                              className="text-[9px]"
+                            >
+                              {guest.metodeKehadiran}
+                            </Badge>
+                          )}
+                          {isHadir ? (
+                            <div className="flex items-center gap-1 text-emerald-600 text-[10px] font-semibold">
+                              <CheckCircle className="h-3 w-3" />
+                              Hadir {formatTime(guest.waktuCheckIn)}
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-1 text-slate-400 text-[10px]">
+                              <Clock className="h-3 w-3" />
+                              Belum Hadir
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </td>
 
-                    {/* RSVP details */}
-                    <td className="px-6 py-3.5">
-                      {guest.metodeKehadiran ? (
-                        <Badge variant={guest.metodeKehadiran === 'luring' ? 'purple' : 'cyan'}>
-                          {guest.metodeKehadiran}
-                        </Badge>
-                      ) : (
-                        <span className="text-[11px] text-slate-400 italic">Belum Konfirmasi</span>
-                      )}
-                    </td>
-
-                    {/* Presensi / CheckIn Status */}
-                    <td className="px-6 py-3.5">
-                      {isHadir ? (
-                        <div className="flex items-center gap-1 text-emerald-700 font-semibold text-xs">
-                          <CheckCircle className="h-4 w-4" />
-                          <span>Hadir</span>
-                          <span className="text-[10px] font-mono text-slate-400 font-normal">
-                            ({formatTime(guest.waktuCheckIn)})
-                          </span>
+                      {/* Action Buttons */}
+                      {!isHadir && (
+                        <div className="border-t border-slate-100 pt-3">
+                          {currentEvent.jenisRapat === 'hybrid' ? (
+                            <div className="grid grid-cols-2 gap-2">
+                              <Button
+                                onClick={() => handleCheckIn(guest.id, guest.nama, 'luring')}
+                                variant="primary"
+                                size="sm"
+                                className="w-full text-xs py-2.5 bg-purple-600 hover:bg-purple-700 text-white border-purple-600"
+                              >
+                                Hadir Luring
+                              </Button>
+                              <Button
+                                onClick={() => handleCheckIn(guest.id, guest.nama, 'daring')}
+                                variant="primary"
+                                size="sm"
+                                className="w-full text-xs py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white border-cyan-600"
+                              >
+                                Hadir Daring
+                              </Button>
+                            </div>
+                          ) : (
+                            <Button
+                              onClick={() => handleCheckIn(guest.id, guest.nama)}
+                              variant="primary"
+                              size="sm"
+                              className="w-full text-xs py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white"
+                            >
+                              Tandai Hadir
+                            </Button>
+                          )}
                         </div>
-                      ) : (
-                        <div className="flex items-center gap-1 text-slate-400 text-xs">
-                          <Clock className="h-4 w-4" />
-                          <span>Belum Hadir</span>
-                        </div>
                       )}
-                    </td>
-
-                    {/* Action button */}
-                    <td className="px-6 py-3.5">
-                      {isHadir ? (
-                        <Button variant="secondary" size="sm" disabled className="text-xs">
-                          Sudah Registrasi
-                        </Button>
-                      ) : currentEvent.jenisRapat === 'hybrid' ? (
-                        <div className="flex gap-1.5">
-                          <Button
-                            onClick={() => handleCheckIn(guest.id, guest.nama, 'luring')}
-                            variant="primary"
-                            size="sm"
-                            className="text-xs bg-purple-600 hover:bg-purple-700 text-white border-purple-600 focus-visible:outline-purple-600"
-                          >
-                            Hadir Luring
-                          </Button>
-                          <Button
-                            onClick={() => handleCheckIn(guest.id, guest.nama, 'daring')}
-                            variant="primary"
-                            size="sm"
-                            className="text-xs bg-cyan-600 hover:bg-cyan-700 text-white border-cyan-600 focus-visible:outline-cyan-600"
-                          >
-                            Hadir Daring
-                          </Button>
-                        </div>
-                      ) : (
-                        <Button
-                          onClick={() => handleCheckIn(guest.id, guest.nama)}
-                          variant="primary"
-                          size="sm"
-                          className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white focus-visible:outline-emerald-600"
-                        >
-                          Tandai Hadir
-                        </Button>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </Table>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
           )}
         </div>
       </div>
