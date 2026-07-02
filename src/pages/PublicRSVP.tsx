@@ -22,6 +22,7 @@ export const PublicRSVP: React.FC = () => {
   const [jabatan, setJabatan] = useState('');
   const [instansi, setInstansi] = useState('');
   const [metodeKehadiran, setMetodeKehadiran] = useState<'daring' | 'luring' | ''>('');
+  const [apakahHadir, setApakahHadir] = useState<'ya' | 'tidak'>('ya');
   
   const [validationError, setValidationError] = useState('');
 
@@ -58,7 +59,7 @@ export const PublicRSVP: React.FC = () => {
       setValidationError('Instansi wajib diisi.');
       return;
     }
-    if (!metodeKehadiran) {
+    if (apakahHadir === 'ya' && !metodeKehadiran) {
       setValidationError('Silakan pilih metode kehadiran Anda.');
       return;
     }
@@ -69,7 +70,8 @@ export const PublicRSVP: React.FC = () => {
         nama: nama.trim(),
         jabatan: jabatan.trim(),
         instansi: instansi.trim(),
-        metodeKehadiran,
+        metodeKehadiran: apakahHadir === 'ya' ? (metodeKehadiran as 'daring' | 'luring') : null,
+        statusUndangan: apakahHadir === 'ya' ? 'dikonfirmasi' : 'tidak_hadir',
         submittedAt: new Date().toISOString(),
       });
 
@@ -202,59 +204,96 @@ export const PublicRSVP: React.FC = () => {
               required
             />
 
-            {/* Attendance Method Selection */}
-            {currentEvent.jenisRapat === 'hybrid' ? (
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block">
-                  Metode Kehadiran
-                </label>
-                <div className="grid grid-cols-2 gap-3">
-                  {showLuringOption && (
-                    <button
-                      type="button"
-                      onClick={() => setMetodeKehadiran('luring')}
-                      className={`py-3 px-4 text-xs font-semibold rounded border transition-colors flex flex-col items-center gap-1 ${
-                        metodeKehadiran === 'luring'
-                          ? 'bg-slate-900 border-slate-900 text-white'
-                          : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
-                    >
-                      <span className="font-bold">Luring (Fisik)</span>
-                      <span className={`text-[9px] ${metodeKehadiran === 'luring' ? 'text-slate-300' : 'text-slate-400'}`}>
-                        Hadir di lokasi acara
-                      </span>
-                    </button>
-                  )}
+            {/* Kehadiran Switch */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block">
+                Konfirmasi Kehadiran
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  key="hadir-ya"
+                  type="button"
+                  onClick={() => setApakahHadir('ya')}
+                  className={`py-2 px-3 text-xs font-semibold rounded border transition-colors ${
+                    apakahHadir === 'ya'
+                      ? 'bg-slate-900 border-slate-900 text-white'
+                      : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  Ya, Saya Akan Hadir
+                </button>
+                <button
+                  key="hadir-tidak"
+                  type="button"
+                  onClick={() => setApakahHadir('tidak')}
+                  className={`py-2 px-3 text-xs font-semibold rounded border transition-colors ${
+                    apakahHadir === 'tidak'
+                      ? 'bg-slate-900 border-slate-900 text-white'
+                      : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                  }`}
+                >
+                  Tidak, Berhalangan
+                </button>
+              </div>
+            </div>
 
-                  {showDaringOption && (
-                    <button
-                      type="button"
-                      onClick={() => setMetodeKehadiran('daring')}
-                      className={`py-3 px-4 text-xs font-semibold rounded border transition-colors flex flex-col items-center gap-1 ${
-                        metodeKehadiran === 'daring'
-                          ? 'bg-slate-900 border-slate-900 text-white'
-                          : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
-                      }`}
-                    >
-                      <span className="font-bold">Daring (Online)</span>
-                      <span className={`text-[9px] ${metodeKehadiran === 'daring' ? 'text-slate-300' : 'text-slate-400'}`}>
-                        Hadir via Video Meeting
-                      </span>
-                    </button>
-                  )}
+            {/* Attendance Method Selection */}
+            {apakahHadir === 'ya' && (
+              currentEvent.jenisRapat === 'hybrid' ? (
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block">
+                    Metode Kehadiran
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    {showLuringOption && (
+                      <button
+                        key="method-luring"
+                        type="button"
+                        onClick={() => setMetodeKehadiran('luring')}
+                        className={`py-3 px-4 text-xs font-semibold rounded border transition-colors flex flex-col items-center gap-1 ${
+                          metodeKehadiran === 'luring'
+                            ? 'bg-slate-900 border-slate-900 text-white'
+                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                        }`}
+                      >
+                        <span className="font-bold">Luring (Fisik)</span>
+                        <span className={`text-[9px] ${metodeKehadiran === 'luring' ? 'text-slate-300' : 'text-slate-400'}`}>
+                          Hadir di lokasi acara
+                        </span>
+                      </button>
+                    )}
+
+                    {showDaringOption && (
+                      <button
+                        key="method-daring"
+                        type="button"
+                        onClick={() => setMetodeKehadiran('daring')}
+                        className={`py-3 px-4 text-xs font-semibold rounded border transition-colors flex flex-col items-center gap-1 ${
+                          metodeKehadiran === 'daring'
+                            ? 'bg-slate-900 border-slate-900 text-white'
+                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                        }`}
+                      >
+                        <span className="font-bold">Daring (Online)</span>
+                        <span className={`text-[9px] ${metodeKehadiran === 'daring' ? 'text-slate-300' : 'text-slate-400'}`}>
+                          Hadir via Video Meeting
+                        </span>
+                      </button>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ) : (
-              // If not hybrid, method is auto-selected, show it as read-only badge/label
-              <div className="bg-slate-50 p-3 rounded border border-slate-100">
-                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
-                  Metode Kehadiran (Otomatis)
-                </span>
-                <span className="text-xs font-bold text-slate-800 capitalize flex items-center gap-1.5">
-                  <span className="h-1.5 w-1.5 rounded-full bg-slate-900"></span>
-                  Kehadiran {currentEvent.jenisRapat}
-                </span>
-              </div>
+              ) : (
+                // If not hybrid, method is auto-selected, show it as read-only badge/label
+                <div className="bg-slate-50 p-3 rounded border border-slate-100">
+                  <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+                    Metode Kehadiran (Otomatis)
+                  </span>
+                  <span className="text-xs font-bold text-slate-800 capitalize flex items-center gap-1.5">
+                    <span className="h-1.5 w-1.5 rounded-full bg-slate-900"></span>
+                    Kehadiran {currentEvent.jenisRapat}
+                  </span>
+                </div>
+              )
             )}
 
             <Button type="submit" className="w-full py-2.5 font-bold uppercase tracking-wider" isLoading={isLoading}>

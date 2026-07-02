@@ -77,20 +77,135 @@ export const DashboardDetail: React.FC = () => {
 
   const getWhatsAppShareLink = () => {
     if (!currentEvent) return '#';
-    const rsvpUrl = `${window.location.origin}/rsvp/${currentEvent.id}`;
+
+    // Grouping helper
+    interface GroupedInstansi {
+      instansi: string;
+      guests: { nama: string; jabatan: string }[];
+    }
+
+    const groupGuestsByInstansi = (list: typeof eventGuests): GroupedInstansi[] => {
+      const groups: Record<string, typeof eventGuests> = {};
+      list.forEach((g) => {
+        const key = g.instansi.trim();
+        if (!groups[key]) {
+          groups[key] = [];
+        }
+        groups[key].push(g);
+      });
+
+      return Object.keys(groups)
+        .sort()
+        .map((instansi) => ({
+          instansi,
+          guests: groups[instansi].map((g) => ({
+            nama: g.nama,
+            jabatan: g.jabatan,
+          })),
+        }));
+    };
+
+    const total = eventGuests.length;
+    const luringList = eventGuests.filter(
+      (g) =>
+        g.metodeKehadiran === 'luring' &&
+        (g.statusUndangan === 'dikonfirmasi' || g.statusUndangan === 'hadir')
+    );
+    const daringList = eventGuests.filter(
+      (g) =>
+        g.metodeKehadiran === 'daring' &&
+        (g.statusUndangan === 'dikonfirmasi' || g.statusUndangan === 'hadir')
+    );
+    const tidakHadirList = eventGuests.filter((g) => g.statusUndangan === 'tidak_hadir');
+    const waitingList = eventGuests.filter((g) => g.statusUndangan === 'diundang');
+
+    const confirmedCount = luringList.length + daringList.length;
+    const waitingCount = waitingList.length;
+    const tidakHadirCount = tidakHadirList.length;
+
+    const confirmedPercent = total > 0 ? ((confirmedCount / total) * 100).toFixed(1) : '0.0';
+    const luringPercent = total > 0 ? ((luringList.length / total) * 100).toFixed(1) : '0.0';
+    const daringPercent = total > 0 ? ((daringList.length / total) * 100).toFixed(1) : '0.0';
+    const tidakHadirPercent = total > 0 ? ((tidakHadirCount / total) * 100).toFixed(1) : '0.0';
+    const waitingPercent = total > 0 ? ((waitingCount / total) * 100).toFixed(1) : '0.0';
+
+    // Format current date and time
+    const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+    const months = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
     
-    const text = `Yth. Bapak/Ibu Tamu Undangan,
+    const now = new Date();
+    const dayName = days[now.getDay()];
+    const dateNum = now.getDate();
+    const monthName = months[now.getMonth()];
+    const yearNum = now.getFullYear();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    
+    const updateTimeStr = `${dayName}, ${dateNum} ${monthName} ${yearNum} | Jam ${hours}.${minutes} WIB`;
 
-Berikut kami sampaikan undangan resmi untuk menghadiri kegiatan internal Kementerian Desa PDTT:
+    let text = `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+*✅ Konfirmasi Kehadiran*
+*${currentEvent.namaKegiatan}*
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Update: ${updateTimeStr}
 
-Kegiatan: ${currentEvent.namaKegiatan}
-Waktu: ${formatDateString(currentEvent.waktuMulai)} s/d Selesai
-Lokasi: ${currentEvent.lokasi.tempat}
-${currentEvent.lokasi.urlOnline ? `Link Online: ${currentEvent.lokasi.urlOnline}\n` : ''}
-Mohon kesediaan Bapak/Ibu untuk melakukan konfirmasi kehadiran melalui tautan resmi RSVP berikut:
-${rsvpUrl}
+Total Anggota PAK: ${total} Orang
+Konfirmasi Hadir: ${confirmedCount} Orang (${confirmedPercent}%)
+  • Hadir Luring: ${luringList.length} Orang (${luringPercent}%)
+  • Hadir Daring: ${daringList.length} Orang (${daringPercent}%)
+Tidak Hadir: ${tidakHadirCount} Orang (${tidakHadirPercent}%)
+Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
 
-Terima kasih atas perhatian dan kehadirannya.`;
+    // A. HADIR LURING
+    text += `━━━ A. HADIR LURING (${luringList.length} Orang) ━━━\n\n`;
+    if (luringList.length === 0) {
+      text += `(Belum ada data)\n\n`;
+    } else {
+      const groupedLuring = groupGuestsByInstansi(luringList);
+      groupedLuring.forEach((group, idx) => {
+        text += `${idx + 1}. ${group.instansi}\n`;
+        group.guests.forEach((g) => {
+          text += `   • ${g.nama}\n     _${g.jabatan}_\n`;
+        });
+        text += '\n';
+      });
+    }
+
+    // B. HADIR DARING
+    text += `━━━ B. HADIR DARING (${daringList.length} Orang) ━━━\n\n`;
+    if (daringList.length === 0) {
+      text += `(Belum ada data)\n\n`;
+    } else {
+      const groupedDaring = groupGuestsByInstansi(daringList);
+      groupedDaring.forEach((group, idx) => {
+        text += `${idx + 1}. ${group.instansi}\n`;
+        group.guests.forEach((g) => {
+          text += `   • ${g.nama}\n     _${g.jabatan}_\n`;
+        });
+        text += '\n';
+      });
+    }
+
+    // C. TIDAK HADIR
+    text += `━━━ C. TIDAK HADIR (${tidakHadirList.length} Orang) ━━━\n\n`;
+    if (tidakHadirList.length === 0) {
+      text += `(Belum ada data)\n\n`;
+    } else {
+      const groupedTidakHadir = groupGuestsByInstansi(tidakHadirList);
+      groupedTidakHadir.forEach((group, idx) => {
+        text += `${idx + 1}. ${group.instansi}\n`;
+        group.guests.forEach((g) => {
+          text += `   • ${g.nama}\n     _${g.jabatan}_\n`;
+        });
+        text += '\n';
+      });
+    }
+
+    // Remove trailing newlines
+    text = text.trim();
 
     return `https://wa.me/?text=${encodeURIComponent(text)}`;
   };

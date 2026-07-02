@@ -17,7 +17,7 @@ export interface Guest {
   nama: string;
   jabatan: string;
   instansi: string;
-  statusUndangan: 'diundang' | 'dikonfirmasi' | 'hadir';
+  statusUndangan: 'diundang' | 'dikonfirmasi' | 'hadir' | 'tidak_hadir';
   metodeKehadiran: 'daring' | 'luring' | null;
   waktuKonfirmasi?: string; // ISO string
   waktuCheckIn?: string; // ISO string
@@ -28,6 +28,7 @@ export interface RSVPResponse {
   nama: string;
   jabatan: string;
   instansi: string;
-  metodeKehadiran: 'daring' | 'luring';
+  metodeKehadiran: 'daring' | 'luring' | null;
+  statusUndangan?: 'dikonfirmasi' | 'tidak_hadir';
   submittedAt: string; // ISO string
 }

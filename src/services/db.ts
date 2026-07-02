@@ -148,6 +148,36 @@ const SEED_GUESTS: Guest[] = [
     statusUndangan: 'diundang',
     metodeKehadiran: null,
   },
+  {
+    id: 'gst-18',
+    eventId: 'evt-dana-desa-2026',
+    nama: 'Asep Saepudin',
+    jabatan: 'Perencana Ahli Madya',
+    instansi: 'Kementerian Perencanaan Pembangunan Nasional/BAPPENAS',
+    statusUndangan: 'tidak_hadir',
+    metodeKehadiran: null,
+    waktuKonfirmasi: '2026-07-02T10:45:00.000Z',
+  },
+  {
+    id: 'gst-19',
+    eventId: 'evt-dana-desa-2026',
+    nama: 'Alfia Oktivalerina, S.E., M.Sc.',
+    jabatan: 'Perencana Ahli Madya',
+    instansi: 'Kementerian Perencanaan Pembangunan Nasional/BAPPENAS',
+    statusUndangan: 'tidak_hadir',
+    metodeKehadiran: null,
+    waktuKonfirmasi: '2026-07-02T10:50:00.000Z',
+  },
+  {
+    id: 'gst-20',
+    eventId: 'evt-dana-desa-2026',
+    nama: 'Muhammad Khoirul Huda, M.Pd.',
+    jabatan: 'Staf Khusus Menteri Bidang Komunikasi Publik dan Kemitraan Media',
+    instansi: 'Kementerian Desa dan Pembangunan Daerah Tertinggal',
+    statusUndangan: 'tidak_hadir',
+    metodeKehadiran: null,
+    waktuKonfirmasi: '2026-07-02T11:00:00.000Z',
+  },
 
   // Guests for Event 2 (Rakor Pembangunan - LURING ONLY)
   {
@@ -359,6 +389,7 @@ export const guestService = {
 
   async submitRSVP(eventId: string, response: RSVPResponse): Promise<Guest> {
     const guests = getGuestsFromStore();
+    const targetStatus = response.statusUndangan || 'dikonfirmasi';
 
     // 1. Try to find if they are pre-invited by matching name & eventId
     // Case insensitive search
@@ -368,7 +399,7 @@ export const guestService = {
 
     if (guest) {
       // Update existing pre-invited guest
-      guest.statusUndangan = 'dikonfirmasi';
+      guest.statusUndangan = targetStatus;
       guest.metodeKehadiran = response.metodeKehadiran;
       guest.waktuKonfirmasi = response.submittedAt;
       // update details if provided
@@ -382,7 +413,7 @@ export const guestService = {
         nama: response.nama,
         jabatan: response.jabatan,
         instansi: response.instansi,
-        statusUndangan: 'dikonfirmasi',
+        statusUndangan: targetStatus,
         metodeKehadiran: response.metodeKehadiran,
         waktuKonfirmasi: response.submittedAt,
       };
