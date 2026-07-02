@@ -470,5 +470,29 @@ export const guestService = {
 
     saveGuestsToStore(guests);
     return delay(guest);
+  },
+
+  async updateGuestMethod(guestId: string, metode: 'daring' | 'luring' | null): Promise<Guest> {
+    const guests = getGuestsFromStore();
+    const guest = guests.find((g) => g.id === guestId);
+
+    if (!guest) {
+      throw new Error('Tamu tidak ditemukan.');
+    }
+
+    guest.metodeKehadiran = metode;
+    
+    // Auto-update status if they were 'diundang' (not confirmed) to 'dikonfirmasi'
+    if (metode && guest.statusUndangan === 'diundang') {
+      guest.statusUndangan = 'dikonfirmasi';
+      guest.waktuKonfirmasi = new Date().toISOString();
+    } else if (!metode && guest.statusUndangan === 'dikonfirmasi') {
+      // If cleared, switch back to diundang
+      guest.statusUndangan = 'diundang';
+      guest.waktuKonfirmasi = undefined;
+    }
+
+    saveGuestsToStore(guests);
+    return delay(guest);
   }
 };

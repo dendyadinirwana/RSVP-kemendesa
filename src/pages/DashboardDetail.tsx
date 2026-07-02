@@ -22,7 +22,7 @@ import {
 
 export const DashboardDetail: React.FC = () => {
   const { eventId } = useParams<{ eventId: string }>();
-  const { currentEvent, guests, fetchEventById, fetchGuests } = useRSVPStore();
+  const { currentEvent, guests, fetchEventById, fetchGuests, updateGuestMethod } = useRSVPStore();
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('semua');
@@ -558,12 +558,52 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
 
                         {/* Column 3: Metode */}
                         <td className="px-6 py-3.5 print:py-2 capitalize font-mono text-xs">
-                          {guest.metodeKehadiran ? (
-                            <Badge variant={guest.metodeKehadiran === 'luring' ? 'purple' : 'cyan'}>
-                              {guest.metodeKehadiran}
-                            </Badge>
+                          {currentEvent.jenisRapat === 'hybrid' ? (
+                            <>
+                              {/* Screen View: Interactive Dropdown */}
+                              <div className="print:hidden">
+                                <select
+                                  value={guest.metodeKehadiran || ''}
+                                  onChange={(e) => {
+                                    const val = e.target.value ? (e.target.value as 'daring' | 'luring') : null;
+                                    updateGuestMethod(currentEvent.id, guest.id, val);
+                                  }}
+                                  className={`bg-slate-50 border border-slate-200 text-[11px] font-mono font-semibold rounded px-2 py-0.5 uppercase tracking-wider text-slate-700 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:border-slate-900 cursor-pointer ${
+                                    guest.metodeKehadiran === 'luring'
+                                      ? 'bg-purple-50 text-purple-700 border-purple-200'
+                                      : guest.metodeKehadiran === 'daring'
+                                      ? 'bg-cyan-50 text-cyan-700 border-cyan-200'
+                                      : 'bg-slate-50 text-slate-700 border-slate-200'
+                                  }`}
+                                >
+                                  <option value="">-</option>
+                                  <option value="luring">Luring</option>
+                                  <option value="daring">Daring</option>
+                                </select>
+                              </div>
+
+                              {/* Print View: Static Badge */}
+                              <div className="hidden print:block">
+                                {guest.metodeKehadiran ? (
+                                  <Badge variant={guest.metodeKehadiran === 'luring' ? 'purple' : 'cyan'}>
+                                    {guest.metodeKehadiran}
+                                  </Badge>
+                                ) : (
+                                  <span className="text-slate-400">-</span>
+                                )}
+                              </div>
+                            </>
                           ) : (
-                            <span className="text-slate-400">-</span>
+                            // Non-hybrid (static method representation)
+                            <>
+                              {guest.metodeKehadiran ? (
+                                <Badge variant={guest.metodeKehadiran === 'luring' ? 'purple' : 'cyan'}>
+                                  {guest.metodeKehadiran}
+                                </Badge>
+                              ) : (
+                                <span className="text-slate-400">-</span>
+                              )}
+                            </>
                           )}
                         </td>
 

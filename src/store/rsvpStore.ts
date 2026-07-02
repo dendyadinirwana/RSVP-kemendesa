@@ -25,6 +25,7 @@ interface RSVPState {
   submitRSVP: (eventId: string, response: RSVPResponse) => Promise<Guest>;
   checkInGuest: (eventId: string, guestId: string, metodeOverride?: 'daring' | 'luring') => Promise<void>;
   autoCheckInDaring: (eventId: string, guestId: string) => Promise<void>;
+  updateGuestMethod: (eventId: string, guestId: string, metode: 'daring' | 'luring' | null) => Promise<void>;
   resetDatabase: () => Promise<void>;
 }
 
@@ -213,6 +214,26 @@ export const useRSVPStore = create<RSVPState>((set, get) => ({
       });
     } catch (err: any) {
       set({ error: err.message || 'Gagal check-in tamu daring', isLoading: false });
+    }
+  },
+
+  updateGuestMethod: async (eventId: string, guestId: string, metode: 'daring' | 'luring' | null) => {
+    set({ isLoading: true, error: null });
+    try {
+      const updatedGuest = await guestService.updateGuestMethod(guestId, metode);
+      set((state) => {
+        const currentList = state.guests[eventId] || [];
+        const updatedList = currentList.map((g) => (g.id === guestId ? updatedGuest : g));
+        return {
+          guests: {
+            ...state.guests,
+            [eventId]: updatedList,
+          },
+          isLoading: false,
+        };
+      });
+    } catch (err: any) {
+      set({ error: err.message || 'Gagal mengubah metode kehadiran', isLoading: false });
     }
   },
 
