@@ -1,0 +1,28 @@
+import React from 'react';
+
+interface TableProps {
+  headers: string[];
+  children: React.ReactNode;
+  className?: string;
+}
+
+export const Table: React.FC<TableProps> = ({ headers, children, className = '' }) => {
+  return (
+    <div className={`w-full overflow-x-auto border border-slate-200 rounded ${className}`}>
+      <table className="w-full text-left border-collapse">
+        <thead>
+          <tr className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+            {headers.map((header, idx) => (
+              <th key={idx} className="px-6 py-3 font-semibold">
+                {header}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-slate-100 bg-white text-sm text-slate-700">
+          {children}
+        </tbody>
+      </table>
+    </div>
+  );
+};

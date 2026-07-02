@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* Global Reset & Base Styling */
+html, body {
+  font-family: var(--font-sans);
+  background-color: #F9FAFB;
+  color: #111827;
+}
+
+/* Print CSS Media Queries */
+@media print {
+  body {
+    background-color: #FFFFFF;
+    color: #000000;
+    font-size: 12pt;
+  }
+  
+  /* Hide non-printable items */
+  .no-print, 
+  nav, 
+  sidebar, 
+  button, 
+  .btn, 
+  .filter-section, 
+  .actions-row,
+  header {
+    display: none !important;
+  }
+
+  /* Force print layout full width */
+  .print-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+  }
+
+  /* Make tables neat for printing */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+  
+  th, td {
+    border: 1px solid #000000 !important;
+    padding: 8px !important;
+    font-size: 10pt !important;
+  }
+
+  /* Ensure page breaks are handled nicely */
+  tr {
+    page-break-inside: avoid;
+  }
+}
