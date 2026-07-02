@@ -9,7 +9,6 @@ import {
   Calendar,
   MapPin,
   Video,
-  ClipboardList,
   AlertCircle
 } from 'lucide-react';
 
@@ -107,21 +106,11 @@ export const PublicRSVP: React.FC = () => {
   const showLuringOption = currentEvent.jenisRapat === 'luring' || currentEvent.jenisRapat === 'hybrid';
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center">
       <div className="max-w-md w-full space-y-6">
-        
-        {/* Logo / Header Instansi */}
-        <div className="text-center">
-          <div className="inline-flex items-center justify-center p-2.5 bg-slate-900 rounded text-white mb-3">
-            <ClipboardList className="h-6 w-6" />
-          </div>
-          <h2 className="text-xs font-bold uppercase tracking-widest text-slate-400 font-mono">
-            Kementerian Desa PDTT
-          </h2>
-        </div>
 
         {/* Info Box */}
-        <div className="bg-white border border-slate-200 rounded p-6 shadow-xs">
+        <div className="bg-white border border-slate-200 rounded-lg p-6 shadow-xs">
           <div className="flex justify-between items-start gap-4 mb-3">
             <h1 className="text-base font-bold text-slate-900 leading-tight">
               {currentEvent.namaKegiatan}
