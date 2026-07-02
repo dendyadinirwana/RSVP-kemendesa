@@ -17,16 +17,49 @@ import {
   UserCheck,
   Search,
   SlidersHorizontal,
-  PlusSquare
+  PlusSquare,
+  GripVertical
 } from 'lucide-react';
 
 export const DashboardDetail: React.FC = () => {
   const { eventId } = useParams<{ eventId: string }>();
-  const { currentEvent, guests, fetchEventById, fetchGuests, updateGuestMethod } = useRSVPStore();
+  const {
+    currentEvent,
+    guests,
+    fetchEventById,
+    fetchGuests,
+    updateGuestMethod,
+    updateGuestStatusAndMethod
+  } = useRSVPStore();
 
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('semua');
   const [metodeFilter, setMetodeFilter] = useState<string>('semua');
+  
+  const [viewMode, setViewMode] = useState<'table' | 'kanban'>('table');
+  const [draggedOverCol, setDraggedOverCol] = useState<string | null>(null);
+  const [promptGuest, setPromptGuest] = useState<any>(null);
+  const [targetDropStatus, setTargetDropStatus] = useState<any>(null);
+
+  const handleDrop = async (guestId: string, status: 'diundang' | 'dikonfirmasi' | 'hadir' | 'tidak_hadir') => {
+    if (!currentEvent) return;
+    const guest = eventGuests.find((g) => g.id === guestId);
+    if (!guest) return;
+
+    if (status === 'diundang') {
+      await updateGuestStatusAndMethod(currentEvent.id, guestId, 'diundang', null);
+    } else if (status === 'tidak_hadir') {
+      await updateGuestStatusAndMethod(currentEvent.id, guestId, 'tidak_hadir', null);
+    } else if (status === 'dikonfirmasi' || status === 'hadir') {
+      if (currentEvent.jenisRapat === 'hybrid' && !guest.metodeKehadiran) {
+        setPromptGuest(guest);
+        setTargetDropStatus(status);
+      } else {
+        const defaultMethod = guest.metodeKehadiran || (currentEvent.jenisRapat === 'daring' ? 'daring' : 'luring');
+        await updateGuestStatusAndMethod(currentEvent.id, guestId, status, defaultMethod);
+      }
+    }
+  };
 
   useEffect(() => {
     if (eventId) {
@@ -212,6 +245,93 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
 
   const handlePrint = () => {
     window.print();
+  };
+
+  const renderKanbanColumn = (
+    colStatus: 'diundang' | 'dikonfirmasi' | 'hadir' | 'tidak_hadir',
+    colTitle: string
+  ) => {
+    const colGuests = filteredGuests.filter((g) => g.statusUndangan === colStatus);
+    const isOver = draggedOverCol === colStatus;
+
+    return (
+      <div
+        onDragOver={(e) => e.preventDefault()}
+        onDragEnter={() => setDraggedOverCol(colStatus)}
+        onDragLeave={() => setDraggedOverCol(null)}
+        onDrop={(e) => {
+          const id = e.dataTransfer.getData('guestId');
+          handleDrop(id, colStatus);
+          setDraggedOverCol(null);
+        }}
+        className={`flex flex-col rounded border p-3 min-h-[450px] transition-all duration-200 ${
+          isOver
+            ? 'bg-slate-100 border-slate-400 border-dashed scale-[1.01]'
+            : 'bg-slate-50 border-slate-200/60'
+        }`}
+      >
+        {/* Column Header */}
+        <div className="flex items-center justify-between mb-3 border-b border-slate-200/80 pb-2">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-800">
+            {colTitle}
+          </span>
+          <span className="px-1.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-white border text-slate-500">
+            {colGuests.length}
+          </span>
+        </div>
+
+        {/* Column Body Cards */}
+        <div className="flex flex-col gap-2.5 overflow-y-auto max-h-[500px] flex-1">
+          {colGuests.length === 0 ? (
+            <div className="flex-1 flex items-center justify-center text-[10px] text-slate-400 font-mono py-10 border border-dashed border-slate-200 rounded">
+              SERET TAMU KE SINI
+            </div>
+          ) : (
+            colGuests.map((g) => (
+              <div
+                key={g.id}
+                draggable
+                onDragStart={(e) => e.dataTransfer.setData('guestId', g.id)}
+                className="bg-white border border-slate-200 rounded p-3 cursor-grab active:cursor-grabbing hover:border-slate-400 hover:shadow-xs transition-all flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-start justify-between gap-1.5">
+                    <div className="font-semibold text-xs text-slate-900 leading-tight">
+                      {g.nama}
+                    </div>
+                    <GripVertical className="h-3.5 w-3.5 text-slate-300 flex-shrink-0 cursor-grab active:cursor-grabbing" />
+                  </div>
+                  <div className="text-[10px] text-slate-500 truncate mt-1">
+                    {g.jabatan} — {g.instansi}
+                  </div>
+                </div>
+
+                {/* Card Footer */}
+                <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-[9px]">
+                  <span className="font-mono text-slate-400 uppercase">
+                    {g.metodeKehadiran ? (
+                      <Badge
+                        variant={g.metodeKehadiran === 'luring' ? 'purple' : 'cyan'}
+                        className="text-[9px] px-1 py-0 scale-90 origin-left"
+                      >
+                        {g.metodeKehadiran}
+                      </Badge>
+                    ) : (
+                      '-'
+                    )}
+                  </span>
+                  {g.waktuCheckIn && (
+                    <span className="text-slate-400 font-mono">
+                      {new Date(g.waktuCheckIn).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    );
   };
 
   if (!currentEvent) {
@@ -448,14 +568,41 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
           <div className="lg:col-span-2 bg-white border border-slate-200 rounded p-6 print:border-none print:p-0">
             {/* Search and Filters (no-print) */}
             <div className="no-print space-y-4 mb-6">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-3 gap-3">
                 <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                   <SlidersHorizontal className="h-3.5 w-3.5" />
-                  Filter & Pencarian Tamu
+                  Daftar Tamu Undangan
                 </h2>
-                <span className="text-xs font-mono text-slate-400">
-                  Ditemukan {filteredGuests.length} dari {totalInvited}
-                </span>
+                
+                <div className="flex items-center gap-3">
+                  <div className="flex bg-slate-100 p-0.5 rounded border border-slate-200/80 text-[10px] uppercase font-mono">
+                    <button
+                      type="button"
+                      onClick={() => setViewMode('table')}
+                      className={`px-3 py-1 font-bold rounded transition-colors ${
+                        viewMode === 'table'
+                          ? 'bg-white text-slate-900 shadow-xs'
+                          : 'text-slate-500 hover:text-slate-800'
+                      }`}
+                    >
+                      Tabel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setViewMode('kanban')}
+                      className={`px-3 py-1 font-bold rounded transition-colors ${
+                        viewMode === 'kanban'
+                          ? 'bg-white text-slate-900 shadow-xs'
+                          : 'text-slate-500 hover:text-slate-800'
+                      }`}
+                    >
+                      Kanban
+                    </button>
+                  </div>
+                  <span className="text-xs font-mono text-slate-400">
+                    Ditemukan {filteredGuests.length} dari {totalInvited}
+                  </span>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -500,68 +647,59 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
               </div>
             </div>
 
-            {/* Guest Table */}
+            {/* Guest Table/Kanban Container */}
             {filteredGuests.length === 0 ? (
               <div className="text-center py-16 text-slate-400 text-xs">
                 Tidak ada data tamu undangan yang cocok dengan filter pencarian.
               </div>
             ) : (
               <div>
-                <Table
-                  headers={
-                    // Print layout needs a Signature / Tanda Tangan column
-                    window.location.search.includes('print') || true
-                      ? ['Nama / Jabatan / Instansi', 'Status', 'Metode', 'Tanda Tangan']
-                      : ['Nama', 'Jabatan / Instansi', 'Status', 'Metode', 'Konfirmasi']
-                  }
-                >
-                  {filteredGuests.map((guest, index) => {
-                    const formattedTime = guest.waktuKonfirmasi
-                      ? new Date(guest.waktuKonfirmasi).toLocaleDateString('id-ID', {
-                          day: 'numeric',
-                          month: 'short',
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })
-                      : '-';
+                {/* Screen View: Table or Kanban */}
+                <div className="print:hidden">
+                  {viewMode === 'table' ? (
+                    <Table
+                      headers={
+                        ['Nama', 'Jabatan / Instansi', 'Status', 'Metode', 'Konfirmasi']
+                      }
+                    >
+                      {filteredGuests.map((guest) => {
+                        const formattedTime = guest.waktuKonfirmasi
+                          ? new Date(guest.waktuKonfirmasi).toLocaleDateString('id-ID', {
+                              day: 'numeric',
+                              month: 'short',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })
+                          : '-';
 
-                    return (
-                      <tr key={guest.id} className="hover:bg-slate-50/30">
-                        {/* Column 1: Details */}
-                        <td className="px-6 py-3.5 print:py-2">
-                          <div className="font-semibold text-slate-900">{guest.nama}</div>
-                          <div className="text-xs text-slate-500">
-                            {guest.jabatan} — {guest.instansi}
-                          </div>
-                          {/* Print details */}
-                          <div className="hidden print:block text-[10px] text-slate-400 font-mono mt-0.5">
-                            {guest.waktuCheckIn
-                              ? `Check-in: ${new Date(guest.waktuCheckIn).toLocaleTimeString('id-ID')}`
-                              : ''}
-                          </div>
-                        </td>
+                        return (
+                          <tr key={guest.id} className="hover:bg-slate-50/30">
+                            {/* Column 1: Details */}
+                            <td className="px-6 py-3.5">
+                              <div className="font-semibold text-slate-900">{guest.nama}</div>
+                              <div className="text-xs text-slate-500">
+                                {guest.jabatan} — {guest.instansi}
+                              </div>
+                            </td>
 
-                        {/* Column 2: Status */}
-                        <td className="px-6 py-3.5 print:py-2 capitalize font-mono text-xs">
-                          <Badge
-                            variant={
-                              guest.statusUndangan === 'hadir'
-                                ? 'success'
-                                : guest.statusUndangan === 'dikonfirmasi'
-                                ? 'info'
-                                : 'neutral'
-                            }
-                          >
-                            {guest.statusUndangan}
-                          </Badge>
-                        </td>
+                            {/* Column 2: Status */}
+                            <td className="px-6 py-3.5 capitalize font-mono text-xs">
+                              <Badge
+                                variant={
+                                  guest.statusUndangan === 'hadir'
+                                    ? 'success'
+                                    : guest.statusUndangan === 'dikonfirmasi'
+                                    ? 'info'
+                                    : 'neutral'
+                                }
+                              >
+                                {guest.statusUndangan}
+                              </Badge>
+                            </td>
 
-                        {/* Column 3: Metode */}
-                        <td className="px-6 py-3.5 print:py-2 capitalize font-mono text-xs">
-                          {currentEvent.jenisRapat === 'hybrid' ? (
-                            <>
-                              {/* Screen View: Interactive Dropdown */}
-                              <div className="print:hidden">
+                            {/* Column 3: Metode */}
+                            <td className="px-6 py-3.5 capitalize font-mono text-xs">
+                              {currentEvent.jenisRapat === 'hybrid' ? (
                                 <select
                                   value={guest.metodeKehadiran || ''}
                                   onChange={(e) => {
@@ -580,60 +718,164 @@ Menunggu Konfirmasi: ${waitingCount} Orang (${waitingPercent}%)\n\n`;
                                   <option value="luring">Luring</option>
                                   <option value="daring">Daring</option>
                                 </select>
-                              </div>
-
-                              {/* Print View: Static Badge */}
-                              <div className="hidden print:block">
-                                {guest.metodeKehadiran ? (
-                                  <Badge variant={guest.metodeKehadiran === 'luring' ? 'purple' : 'cyan'}>
-                                    {guest.metodeKehadiran}
-                                  </Badge>
-                                ) : (
-                                  <span className="text-slate-400">-</span>
-                                )}
-                              </div>
-                            </>
-                          ) : (
-                            // Non-hybrid (static method representation)
-                            <>
-                              {guest.metodeKehadiran ? (
-                                <Badge variant={guest.metodeKehadiran === 'luring' ? 'purple' : 'cyan'}>
-                                  {guest.metodeKehadiran}
-                                </Badge>
                               ) : (
-                                <span className="text-slate-400">-</span>
+                                <>
+                                  {guest.metodeKehadiran ? (
+                                    <Badge variant={guest.metodeKehadiran === 'luring' ? 'purple' : 'cyan'}>
+                                      {guest.metodeKehadiran}
+                                    </Badge>
+                                  ) : (
+                                    <span className="text-slate-400">-</span>
+                                  )}
+                                </>
                               )}
-                            </>
-                          )}
-                        </td>
+                            </td>
 
-                        {/* Column 4: Signature (Print Layout) or Waktu (Screen Layout) */}
-                        <td className="px-6 py-3.5 print:py-2 font-mono text-xs w-40">
-                          {/* Screen view: shows confirmation time */}
-                          <span className="print:hidden text-slate-500">{formattedTime}</span>
+                            {/* Column 4: Konfirmasi */}
+                            <td className="px-6 py-3.5 font-mono text-xs w-40 text-slate-500">
+                              {formattedTime}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </Table>
+                  ) : (
+                    /* Kanban Columns */
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-2">
+                      {renderKanbanColumn('diundang', 'Menunggu Konfirmasi')}
+                      {renderKanbanColumn('dikonfirmasi', 'Dikonfirmasi')}
+                      {renderKanbanColumn('hadir', 'Hadir (Check-In)')}
+                      {renderKanbanColumn('tidak_hadir', 'Tidak Hadir')}
+                    </div>
+                  )}
+                </div>
 
-                          {/* Print view: Empty box/line for signature sheet */}
-                          <div className="hidden print:block text-slate-800 text-[11px] font-sans">
-                            {guest.metodeKehadiran === 'daring' ? (
-                              <span className="text-[10px] uppercase font-semibold text-slate-400 font-mono">
-                                [DARING ONLINE]
-                              </span>
+                {/* Print View: Always Table with Tanda Tangan */}
+                <div className="hidden print:block">
+                  <Table
+                    headers={
+                      ['Nama / Jabatan / Instansi', 'Status', 'Metode', 'Tanda Tangan']
+                    }
+                  >
+                    {filteredGuests.map((guest, index) => {
+                      return (
+                        <tr key={guest.id} className="hover:bg-slate-50/30">
+                          {/* Column 1: Details */}
+                          <td className="px-6 py-3.5 print:py-2">
+                            <div className="font-semibold text-slate-900">{guest.nama}</div>
+                            <div className="text-xs text-slate-500">
+                              {guest.jabatan} — {guest.instansi}
+                            </div>
+                            <div className="hidden print:block text-[10px] text-slate-400 font-mono mt-0.5">
+                              {guest.waktuCheckIn
+                                ? `Check-in: ${new Date(guest.waktuCheckIn).toLocaleTimeString('id-ID')}`
+                                : ''}
+                            </div>
+                          </td>
+
+                          {/* Column 2: Status */}
+                          <td className="px-6 py-3.5 print:py-2 capitalize font-mono text-xs">
+                            <Badge
+                              variant={
+                                guest.statusUndangan === 'hadir'
+                                  ? 'success'
+                                  : guest.statusUndangan === 'dikonfirmasi'
+                                  ? 'info'
+                                  : 'neutral'
+                              }
+                            >
+                              {guest.statusUndangan}
+                            </Badge>
+                          </td>
+
+                          {/* Column 3: Metode */}
+                          <td className="px-6 py-3.5 print:py-2 capitalize font-mono text-xs">
+                            {guest.metodeKehadiran ? (
+                              <Badge variant={guest.metodeKehadiran === 'luring' ? 'purple' : 'cyan'}>
+                                {guest.metodeKehadiran}
+                              </Badge>
                             ) : (
-                              <div className="flex items-center gap-2">
-                                <span className="text-[10px] text-slate-300 font-mono mr-2">{index + 1}.</span>
-                                <div className="border-b border-slate-300 w-24 h-5"></div>
-                              </div>
+                              <span className="text-slate-400">-</span>
                             )}
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </Table>
+                          </td>
+
+                          {/* Column 4: Signature */}
+                          <td className="px-6 py-3.5 print:py-2 font-mono text-xs w-40">
+                            <div className="text-slate-800 text-[11px] font-sans">
+                              {guest.metodeKehadiran === 'daring' ? (
+                                <span className="text-[10px] uppercase font-semibold text-slate-400 font-mono">
+                                  [DARING ONLINE]
+                                </span>
+                              ) : (
+                                <div className="flex items-center gap-2">
+                                  <span className="text-[10px] text-slate-300 font-mono mr-2">{index + 1}.</span>
+                                  <div className="border-b border-slate-300 w-24 h-5"></div>
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </Table>
+                </div>
               </div>
             )}
           </div>
         </section>
+
+        {/* Method Selector Modal when Dragging to Confirmed/Attended on Hybrid Event */}
+        {promptGuest && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-xs no-print">
+            <div className="bg-white border border-slate-200 rounded max-w-sm w-full p-6 shadow-xs relative">
+              <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1 font-mono">
+                PILIH METODE KEHADIRAN
+              </h2>
+              <h3 className="text-sm font-bold text-slate-900 mb-2 leading-tight">
+                {promptGuest.nama}
+              </h3>
+              <p className="text-xs text-slate-500 mb-6 leading-relaxed">
+                Silakan pilih metode kehadiran untuk tamu ini karena rapat bersifat hybrid.
+              </p>
+
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <Button
+                  onClick={async () => {
+                    await updateGuestStatusAndMethod(currentEvent.id, promptGuest.id, targetDropStatus, 'luring');
+                    setPromptGuest(null);
+                    setTargetDropStatus(null);
+                  }}
+                  variant="primary"
+                  className="bg-purple-600 hover:bg-purple-700 border-purple-600 text-xs py-2.5 font-bold uppercase tracking-wider"
+                >
+                  Luring (Fisik)
+                </Button>
+                <Button
+                  onClick={async () => {
+                    await updateGuestStatusAndMethod(currentEvent.id, promptGuest.id, targetDropStatus, 'daring');
+                    setPromptGuest(null);
+                    setTargetDropStatus(null);
+                  }}
+                  variant="primary"
+                  className="bg-cyan-600 hover:bg-cyan-700 border-cyan-600 text-xs py-2.5 font-bold uppercase tracking-wider"
+                >
+                  Daring (Online)
+                </Button>
+              </div>
+
+              <Button
+                onClick={() => {
+                  setPromptGuest(null);
+                  setTargetDropStatus(null);
+                }}
+                variant="secondary"
+                className="w-full text-xs py-2"
+              >
+                Batal
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Print Signature Block (Dua Kolom Mengetahui) */}
         <div className="hidden print:grid grid-cols-2 gap-20 mt-12 text-center text-xs">
