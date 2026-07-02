@@ -25,6 +25,7 @@ interface RSVPState {
   submitRSVP: (eventId: string, response: RSVPResponse) => Promise<Guest>;
   checkInGuest: (eventId: string, guestId: string) => Promise<void>;
   autoCheckInDaring: (eventId: string, guestId: string) => Promise<void>;
+  resetDatabase: () => Promise<void>;
 }
 
 export const useRSVPStore = create<RSVPState>((set, get) => ({
@@ -174,7 +175,7 @@ export const useRSVPStore = create<RSVPState>((set, get) => ({
     }
   },
 
-  checkInGuest: async (eventId, guestId) => {
+  checkInGuest: async (eventId: string, guestId: string) => {
     set({ isLoading: true, error: null });
     try {
       const updatedGuest = await guestService.checkInGuest(guestId);
@@ -212,6 +213,24 @@ export const useRSVPStore = create<RSVPState>((set, get) => ({
       });
     } catch (err: any) {
       set({ error: err.message || 'Gagal check-in tamu daring', isLoading: false });
+    }
+  },
+
+  resetDatabase: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      await eventService.resetDatabase();
+      set({
+        events: [],
+        guests: {},
+        currentEvent: null,
+        isLoading: false,
+      });
+      // Immediately fetch new seed events
+      const events = await eventService.getEvents();
+      set({ events });
+    } catch (err: any) {
+      set({ error: err.message || 'Gagal mereset database', isLoading: false });
     }
   }
 }));

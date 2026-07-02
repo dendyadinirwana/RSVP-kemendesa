@@ -46,7 +46,7 @@ const SEED_EVENTS: Event[] = [
 ];
 
 const SEED_GUESTS: Guest[] = [
-  // Guests for Event 1 (Sosialisasi Dana Desa)
+  // Guests for Event 1 (Sosialisasi Dana Desa - HYBRID)
   {
     id: 'gst-1',
     eventId: 'evt-dana-desa-2026',
@@ -97,8 +97,59 @@ const SEED_GUESTS: Guest[] = [
     statusUndangan: 'diundang',
     metodeKehadiran: null,
   },
+  {
+    id: 'gst-9',
+    eventId: 'evt-dana-desa-2026',
+    nama: 'Drs. Mulyadi, M.Si.',
+    jabatan: 'Kepala Bagian Keuangan',
+    instansi: 'Pemerintah Kabupaten Cianjur',
+    statusUndangan: 'dikonfirmasi',
+    metodeKehadiran: 'daring',
+    waktuKonfirmasi: '2026-07-02T09:45:00.000Z',
+  },
+  {
+    id: 'gst-10',
+    eventId: 'evt-dana-desa-2026',
+    nama: 'Dr. H. Adnan, M.Si.',
+    jabatan: 'Camat Parung',
+    instansi: 'Pemerintah Kabupaten Bogor',
+    statusUndangan: 'hadir',
+    metodeKehadiran: 'luring',
+    waktuKonfirmasi: '2026-07-02T10:00:00.000Z',
+    waktuCheckIn: '2026-07-15T08:50:00.000Z',
+  },
+  {
+    id: 'gst-11',
+    eventId: 'evt-dana-desa-2026',
+    nama: 'Sri Wahyuni, S.Kom.',
+    jabatan: 'Analis Sistem Informasi',
+    instansi: 'Dinas PMD Provinsi Jawa Barat',
+    statusUndangan: 'dikonfirmasi',
+    metodeKehadiran: 'luring',
+    waktuKonfirmasi: '2026-07-02T10:15:00.000Z',
+  },
+  {
+    id: 'gst-12',
+    eventId: 'evt-dana-desa-2026',
+    nama: 'Agus Setiawan, S.E.',
+    jabatan: 'Tenaga Ahli Madya P3MD',
+    instansi: 'Provinsi Banten',
+    statusUndangan: 'hadir',
+    metodeKehadiran: 'daring',
+    waktuKonfirmasi: '2026-07-02T10:30:00.000Z',
+    waktuCheckIn: '2026-07-15T09:05:00.000Z',
+  },
+  {
+    id: 'gst-13',
+    eventId: 'evt-dana-desa-2026',
+    nama: 'Mega Lestari, S.H.',
+    jabatan: 'Analis Kebijakan Ahli Pertama',
+    instansi: 'Kementerian Desa PDTT',
+    statusUndangan: 'diundang',
+    metodeKehadiran: null,
+  },
 
-  // Guests for Event 2 (Rakor Pembangunan)
+  // Guests for Event 2 (Rakor Pembangunan - LURING ONLY)
   {
     id: 'gst-6',
     eventId: 'evt-rakor-pembangunan',
@@ -126,6 +177,49 @@ const SEED_GUESTS: Guest[] = [
     instansi: 'Kabupaten Lebak',
     statusUndangan: 'diundang',
     metodeKehadiran: null,
+  },
+  {
+    id: 'gst-14',
+    eventId: 'evt-rakor-pembangunan',
+    nama: 'Yusuf Mansur, S.IP.',
+    jabatan: 'Kepala Bidang Sarana Prasarana',
+    instansi: 'Bappeda Kabupaten Pandeglang',
+    statusUndangan: 'hadir',
+    metodeKehadiran: 'luring',
+    waktuKonfirmasi: '2026-07-02T11:45:00.000Z',
+    waktuCheckIn: '2026-07-20T12:55:00.000Z',
+  },
+
+  // Guests for Event 3 (Webinar BUMDes - DARING ONLY)
+  {
+    id: 'gst-15',
+    eventId: 'evt-webinar-bumdes',
+    nama: 'Achmad Ridwan, M.M.',
+    jabatan: 'Direktur BUMDes Bersama',
+    instansi: 'Kecamatan Singaparna',
+    statusUndangan: 'diundang',
+    metodeKehadiran: null,
+  },
+  {
+    id: 'gst-16',
+    eventId: 'evt-webinar-bumdes',
+    nama: 'Kartika Sari, S.Pd.',
+    jabatan: 'Pendamping Desa',
+    instansi: 'Kecamatan Ciawi',
+    statusUndangan: 'dikonfirmasi',
+    metodeKehadiran: 'daring',
+    waktuKonfirmasi: '2026-07-02T12:00:00.000Z',
+  },
+  {
+    id: 'gst-17',
+    eventId: 'evt-webinar-bumdes',
+    nama: 'Dr. H. Supriadi, M.Si.',
+    jabatan: 'Kepala Pusat Pelatihan',
+    instansi: 'BPSDM Kemendesa PDTT',
+    statusUndangan: 'hadir',
+    metodeKehadiran: 'daring',
+    waktuKonfirmasi: '2026-07-02T12:15:00.000Z',
+    waktuCheckIn: '2026-07-25T09:58:00.000Z',
   }
 ];
 
@@ -189,6 +283,13 @@ export const eventService = {
     events.push(newEvent);
     saveEventsToStore(events);
     return delay(newEvent);
+  },
+
+  async resetDatabase(): Promise<void> {
+    localStorage.removeItem(STORAGE_KEYS.EVENTS);
+    localStorage.removeItem(STORAGE_KEYS.GUESTS);
+    initDb();
+    return delay(undefined);
   },
 };
 

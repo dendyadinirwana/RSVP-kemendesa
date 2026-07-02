@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 
 export const DashboardList: React.FC = () => {
-  const { events, guests, isLoading, fetchEvents, fetchGuests, createEvent } = useRSVPStore();
+  const { events, guests, isLoading, fetchEvents, fetchGuests, createEvent, resetDatabase } = useRSVPStore();
   
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
@@ -130,16 +130,30 @@ export const DashboardList: React.FC = () => {
               Sistem RSVP dan presensi kegiatan internal Kementerian Desa PDTT.
             </p>
           </div>
-          <Button
-            onClick={() => {
-              setCreatedEvent(null);
-              setIsModalOpen(true);
-            }}
-            className="sm:w-auto w-full inline-flex items-center justify-center gap-1.5"
-          >
-            <Plus className="h-4 w-4" />
-            Kegiatan Baru
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+            <Button
+              onClick={async () => {
+                if (window.confirm('Apakah Anda yakin ingin mereset seluruh database local ke data dummy awal? Data kustom yang Anda buat akan hilang.')) {
+                  await resetDatabase();
+                  alert('Database berhasil direset ke data dummy.');
+                }
+              }}
+              variant="outline"
+              className="sm:w-auto w-full inline-flex items-center justify-center gap-1.5 border-slate-300"
+            >
+              Reset Data Dummy
+            </Button>
+            <Button
+              onClick={() => {
+                setCreatedEvent(null);
+                setIsModalOpen(true);
+              }}
+              className="sm:w-auto w-full inline-flex items-center justify-center gap-1.5"
+            >
+              <Plus className="h-4 w-4" />
+              Kegiatan Baru
+            </Button>
+          </div>
         </header>
 
         {/* Loading State */}
