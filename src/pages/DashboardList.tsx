@@ -14,8 +14,7 @@ import {
   ClipboardList,
   CheckCircle,
   Copy,
-  Check,
-  Globe
+  Check
 } from 'lucide-react';
 
 export const DashboardList: React.FC = () => {
@@ -115,18 +114,21 @@ export const DashboardList: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-200 pb-6 mb-8 gap-4">
+        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-250/70 pb-6 mb-8 gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <Globe className="h-6 w-6 text-slate-800" />
-              <h1 className="text-xl font-bold tracking-tight text-slate-900 font-sans uppercase">
-                RSVP & Presensi
-              </h1>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest font-mono">
+                Nexus RSVP // Orchestration System
+              </div>
             </div>
-            <p className="text-sm text-slate-500">
+            <h1 className="text-xl font-bold tracking-tight text-slate-900 uppercase">
+              RSVP & Presensi Kegiatan
+            </h1>
+            <p className="text-xs text-slate-500">
               Sistem RSVP dan presensi kegiatan internal Kementerian Desa PDTT.
             </p>
           </div>
@@ -139,7 +141,7 @@ export const DashboardList: React.FC = () => {
                 }
               }}
               variant="outline"
-              className="sm:w-auto w-full inline-flex items-center justify-center gap-1.5 border-slate-300"
+              className="sm:w-auto w-full inline-flex items-center justify-center gap-1.5 border-slate-250/80"
             >
               Reset Data Dummy
             </Button>
@@ -158,18 +160,18 @@ export const DashboardList: React.FC = () => {
 
         {/* Loading State */}
         {isLoading && events.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-20 bg-white border border-slate-200 rounded">
+          <div className="flex flex-col items-center justify-center py-20 bg-white border border-slate-200 rounded-lg">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-slate-900 mb-4"></div>
-            <p className="text-sm text-slate-500 font-mono">MEMUAT DAFTAR KEGIATAN...</p>
+            <p className="text-xs text-slate-400 font-mono">MEMUAT DAFTAR KEGIATAN...</p>
           </div>
         )}
 
         {/* Empty State */}
         {!isLoading && events.length === 0 && (
-          <div className="text-center py-16 bg-white border border-slate-200 rounded p-6">
-            <ClipboardList className="mx-auto h-12 w-12 text-slate-300 mb-4" />
-            <h3 className="text-lg font-medium text-slate-900 mb-1">Belum Ada Kegiatan</h3>
-            <p className="text-sm text-slate-500 max-w-md mx-auto mb-6">
+          <div className="text-center py-16 bg-white border border-slate-200 rounded-lg p-6">
+            <ClipboardList className="mx-auto h-12 w-12 text-slate-350 mb-4" />
+            <h3 className="text-sm font-medium text-slate-900 mb-1">Belum Ada Kegiatan</h3>
+            <p className="text-xs text-slate-450 max-w-md mx-auto mb-6">
               Mulai dengan membuat kegiatan baru untuk mengelola RSVP tamu undangan Anda.
             </p>
             <Button onClick={() => setIsModalOpen(true)}>
@@ -188,11 +190,11 @@ export const DashboardList: React.FC = () => {
               const totalAttended = eventGuests.filter((g) => g.statusUndangan === 'hadir').length;
 
               return (
-                <Card key={evt.id} className="flex flex-col justify-between hover:border-slate-300">
+                <Card key={evt.id} className="flex flex-col justify-between hover:border-slate-350">
                   <div>
                     {/* Header Event Card */}
                     <div className="flex items-start justify-between gap-4 mb-4">
-                      <h2 className="text-base font-bold text-slate-900 leading-tight">
+                      <h2 className="text-sm font-bold text-slate-900 leading-snug">
                         {evt.namaKegiatan}
                       </h2>
                       <Badge
@@ -229,18 +231,18 @@ export const DashboardList: React.FC = () => {
                     </div>
 
                     {/* Quick Stats Grid */}
-                    <div className="grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded mb-6 border border-slate-100 text-center">
+                    <div className="grid grid-cols-3 gap-2 bg-slate-50/40 p-3 rounded-lg mb-6 border border-slate-205/65 text-center">
                       <div>
-                        <div className="text-[10px] uppercase font-semibold text-slate-400 font-mono">Diundang</div>
-                        <div className="text-lg font-bold text-slate-700 font-mono mt-0.5">{totalInvited}</div>
+                        <div className="text-[9px] uppercase font-semibold text-slate-450 font-mono tracking-wider">Diundang</div>
+                        <div className="text-base font-bold text-slate-800 font-mono mt-0.5">{totalInvited}</div>
                       </div>
                       <div>
-                        <div className="text-[10px] uppercase font-semibold text-slate-400 font-mono">Konfirmasi</div>
-                        <div className="text-lg font-bold text-blue-600 font-mono mt-0.5">{totalConfirmed}</div>
+                        <div className="text-[9px] uppercase font-semibold text-slate-450 font-mono tracking-wider">Konfirmasi</div>
+                        <div className="text-base font-bold text-slate-800 font-mono mt-0.5">{totalConfirmed}</div>
                       </div>
                       <div>
-                        <div className="text-[10px] uppercase font-semibold text-slate-400 font-mono">Hadir</div>
-                        <div className="text-lg font-bold text-emerald-600 font-mono mt-0.5">{totalAttended}</div>
+                        <div className="text-[9px] uppercase font-semibold text-slate-450 font-mono tracking-wider">Hadir</div>
+                        <div className="text-base font-bold text-slate-800 font-mono mt-0.5">{totalAttended}</div>
                       </div>
                     </div>
                   </div>
@@ -249,12 +251,12 @@ export const DashboardList: React.FC = () => {
                   <div className="border-t border-slate-100 pt-4 flex flex-col gap-2">
                     <div className="flex gap-2">
                       <Link to={`/dashboard/${evt.id}`} className="flex-1">
-                        <Button variant="outline" size="sm" className="w-full text-xs py-2">
+                        <Button variant="outline" size="sm" className="w-full text-[10px] py-2 border-slate-250/70">
                           Dashboard
                         </Button>
                       </Link>
                       <Link to={`/checkin/${evt.id}`} className="flex-1">
-                        <Button variant="outline" size="sm" className="w-full text-xs py-2">
+                        <Button variant="outline" size="sm" className="w-full text-[10px] py-2 border-slate-250/70">
                           Check-In Hari-H
                         </Button>
                       </Link>
@@ -262,14 +264,14 @@ export const DashboardList: React.FC = () => {
                     
                     <div className="flex gap-2 items-center">
                       <Link to={`/rsvp/${evt.id}`} target="_blank" className="flex-1">
-                        <Button variant="secondary" size="sm" className="w-full text-xs py-2 inline-flex items-center gap-1">
+                        <Button variant="secondary" size="sm" className="w-full text-[10px] py-2 inline-flex items-center justify-center gap-1">
                           Form RSVP Tamu
                           <ArrowRight className="h-3 w-3" />
                         </Button>
                       </Link>
                       <button
                         onClick={() => handleCopyLink(evt.id)}
-                        className="p-2 border border-slate-200 rounded text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors"
+                        className="p-2 border border-slate-200 hover:border-slate-300 rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-50 transition-colors"
                         title="Salin Link RSVP"
                       >
                         {copiedId === evt.id ? (

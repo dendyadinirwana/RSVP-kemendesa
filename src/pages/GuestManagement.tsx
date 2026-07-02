@@ -119,21 +119,22 @@ export const GuestManagement: React.FC = () => {
 
   if (!currentEvent) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen flex flex-col items-center justify-center p-4">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-slate-900 mb-4"></div>
-        <p className="text-sm text-slate-500 font-mono">MEMUAT DATA KEGIATAN...</p>
+        <p className="text-xs text-slate-450 font-mono">MEMUAT HALAMAN KELOLA TAMU...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto">
+        
         {/* Navigation Breadcrumb */}
         <div className="mb-4">
           <Link
             to={`/dashboard/${eventId}`}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider"
+            className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-widest font-mono"
           >
             <ArrowLeft className="h-3 w-3" />
             Kembali ke Dashboard Kegiatan
@@ -141,8 +142,8 @@ export const GuestManagement: React.FC = () => {
         </div>
 
         {/* Event Header Card */}
-        <div className="bg-white border border-slate-200 rounded p-6 mb-8">
-          <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+        <div className="bg-white border border-slate-200 rounded-lg shadow-xs p-6 mb-8">
+          <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest block mb-1.5 font-mono">
             Kegiatan Terpilih
           </span>
           <h1 className="text-lg font-bold text-slate-900 mb-1">{currentEvent.namaKegiatan}</h1>
@@ -151,18 +152,18 @@ export const GuestManagement: React.FC = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Form Side */}
           <div className="md:col-span-1 space-y-6">
-            <div className="bg-white border border-slate-200 rounded overflow-hidden">
+            <div className="bg-white border border-slate-200 rounded-lg shadow-xs overflow-hidden">
               {/* Tab Selector */}
-              <div className="flex border-b border-slate-200 bg-slate-50">
+              <div className="flex border-b border-slate-200 bg-slate-50/50">
                 <button
                   onClick={() => setActiveTab('manual')}
-                  className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider border-r border-slate-200 flex items-center justify-center gap-1.5 transition-colors ${
+                  className={`flex-1 py-3 text-[10px] font-bold uppercase tracking-wider border-r border-slate-200 flex items-center justify-center gap-1.5 transition-colors font-mono ${
                     activeTab === 'manual'
-                      ? 'bg-white text-slate-900 border-b-2 border-b-slate-900'
-                      : 'text-slate-500 hover:text-slate-800'
+                      ? 'bg-white text-slate-900 border-b-2 border-b-slate-950'
+                      : 'text-slate-550 hover:text-slate-800'
                   }`}
                 >
                   <UserPlus className="h-3.5 w-3.5" />
@@ -170,10 +171,10 @@ export const GuestManagement: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setActiveTab('csv')}
-                  className={`flex-1 py-3 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors ${
+                  className={`flex-1 py-3 text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors font-mono ${
                     activeTab === 'csv'
-                      ? 'bg-white text-slate-900 border-b-2 border-b-slate-900'
-                      : 'text-slate-500 hover:text-slate-800'
+                      ? 'bg-white text-slate-900 border-b-2 border-b-slate-955'
+                      : 'text-slate-550 hover:text-slate-800'
                   }`}
                 >
                   <Upload className="h-3.5 w-3.5" />
@@ -306,10 +307,10 @@ export const GuestManagement: React.FC = () => {
 
           {/* List/Preview Side */}
           <div className="md:col-span-2">
-            <div className="bg-white border border-slate-200 rounded p-6">
+            <div className="bg-white border border-slate-200 rounded-lg shadow-xs p-6">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
-                <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                  <Users className="h-4 w-4 text-slate-600" />
+                <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                  <Users className="h-4 w-4 text-slate-400" />
                   Daftar Tamu Terdaftar ({eventGuests.length})
                 </h2>
                 <Badge variant="primary">Total Diundang</Badge>

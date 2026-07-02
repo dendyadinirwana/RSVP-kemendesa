@@ -8,12 +8,12 @@ interface TableProps {
 
 export const Table: React.FC<TableProps> = ({ headers, children, className = '' }) => {
   return (
-    <div className={`w-full overflow-x-auto border border-slate-200 rounded ${className}`}>
+    <div className={`w-full overflow-x-auto border border-slate-200 rounded-lg bg-white shadow-xs ${className}`}>
       <table className="w-full text-left border-collapse">
         <thead>
-          <tr className="bg-slate-50 border-b border-slate-200 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+          <tr className="bg-slate-50/60 border-b border-slate-200 text-[10px] font-semibold text-slate-500 uppercase tracking-wider font-mono">
             {headers.map((header, idx) => (
-              <th key={idx} className="px-6 py-3 font-semibold">
+              <th key={idx} className="px-6 py-3.5 font-semibold">
                 {header}
               </th>
             ))}

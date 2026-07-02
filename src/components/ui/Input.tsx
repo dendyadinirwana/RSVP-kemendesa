@@ -13,15 +13,15 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={generatedId} className="text-xs font-semibold text-slate-700 uppercase tracking-wider">
+          <label htmlFor={generatedId} className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider font-mono">
             {label}
           </label>
         )}
         <input
           ref={ref}
           id={generatedId}
-          className={`w-full px-3 py-2 text-sm bg-white border rounded transition-colors placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-900 focus:border-slate-900 ${
-            error ? 'border-red-500 ring-1 ring-red-500' : 'border-slate-200'
+          className={`w-full px-3 py-2 text-sm bg-white border rounded-lg transition-colors placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-slate-950 focus:border-slate-950 ${
+            error ? 'border-red-550 ring-1 ring-red-550' : 'border-slate-200'
           } ${className}`}
           {...props}
         />

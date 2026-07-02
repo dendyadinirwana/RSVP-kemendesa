@@ -10,8 +10,11 @@
 /* Global Reset & Base Styling */
 html, body {
   font-family: var(--font-sans);
-  background-color: #F9FAFB;
+  background-color: #ffffff;
+  background-image: radial-gradient(#e2e8f0 1.2px, transparent 1.2px);
+  background-size: 20px 20px;
   color: #111827;
+  min-height: 100vh;
 }
 
 /* Print CSS Media Queries */

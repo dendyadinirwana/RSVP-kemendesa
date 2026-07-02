@@ -63,9 +63,9 @@ export const CheckIn: React.FC = () => {
 
   if (!currentEvent) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
+      <div className="min-h-screen flex flex-col items-center justify-center p-4">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-slate-900 mb-4"></div>
-        <p className="text-sm text-slate-500 font-mono">MEMUAT HALAMAN CHECK-IN...</p>
+        <p className="text-xs text-slate-450 font-mono">MEMUAT HALAMAN CHECK-IN...</p>
       </div>
     );
   }
@@ -76,14 +76,14 @@ export const CheckIn: React.FC = () => {
   const pendingCheckIn = totalGuests - totalCheckedIn;
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
         
         {/* Navigation Breadcrumb */}
         <div className="mb-4">
           <Link
             to={`/dashboard/${eventId}`}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors uppercase tracking-wider"
+            className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-widest font-mono"
           >
             <ArrowLeft className="h-3 w-3" />
             Kembali ke Dashboard Kegiatan
@@ -91,11 +91,11 @@ export const CheckIn: React.FC = () => {
         </div>
 
         {/* Header Event Card */}
-        <div className="bg-white border border-slate-200 rounded p-6 mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="bg-white border border-slate-200 rounded-lg shadow-xs p-6 mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <div className="flex items-center gap-1.5 mb-1 text-slate-500">
+            <div className="flex items-center gap-1.5 mb-1 text-slate-400">
               <UserCheck className="h-4 w-4" />
-              <span className="text-[10px] font-semibold uppercase tracking-wider">
+              <span className="text-[9px] font-semibold uppercase tracking-widest font-mono">
                 Registrasi & Presensi Hari-H
               </span>
             </div>
@@ -106,28 +106,28 @@ export const CheckIn: React.FC = () => {
           </div>
 
           {/* Mini Dashboard Tracker */}
-          <div className="flex gap-4 bg-slate-50 border border-slate-100 p-3 rounded text-center">
+          <div className="flex gap-4 bg-slate-50/40 border border-slate-200/60 p-3 rounded-lg text-center">
             <div>
-              <span className="text-[9px] uppercase font-bold text-slate-400 font-mono block">Diundang</span>
+              <span className="text-[8px] uppercase font-bold text-slate-400 font-mono tracking-wider block">Diundang</span>
               <span className="text-base font-bold text-slate-700 font-mono">{totalGuests}</span>
             </div>
             <div className="border-r border-slate-200 h-8 self-center"></div>
             <div>
-              <span className="text-[9px] uppercase font-bold text-slate-400 font-mono block">Hadir</span>
+              <span className="text-[8px] uppercase font-bold text-slate-400 font-mono tracking-wider block">Hadir</span>
               <span className="text-base font-bold text-emerald-600 font-mono">{totalCheckedIn}</span>
             </div>
             <div className="border-r border-slate-200 h-8 self-center"></div>
             <div>
-              <span className="text-[9px] uppercase font-bold text-slate-400 font-mono block">Sisa</span>
+              <span className="text-[8px] uppercase font-bold text-slate-400 font-mono tracking-wider block">Sisa</span>
               <span className="text-base font-bold text-amber-600 font-mono">{pendingCheckIn}</span>
             </div>
           </div>
         </div>
 
         {/* Central UI */}
-        <div className="bg-white border border-slate-200 rounded p-6">
+        <div className="bg-white border border-slate-200 rounded-lg shadow-xs p-6">
           <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-6">
-            <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+            <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-wider font-mono">
               Pencarian & Registrasi Cepat
             </h2>
             {successMsg && (
@@ -148,7 +148,7 @@ export const CheckIn: React.FC = () => {
               placeholder="Ketik Nama Tamu, Instansi, atau Jabatan untuk mencari..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded focus:outline-none focus:ring-1 focus:ring-slate-900 focus:border-slate-900"
+              className="w-full pl-10 pr-4 py-2.5 text-sm bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-950 focus:border-slate-950"
             />
           </div>
 
