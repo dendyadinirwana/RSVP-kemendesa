@@ -119,12 +119,6 @@ export const DashboardList: React.FC = () => {
         {/* Header */}
         <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-slate-250/70 pb-6 mb-8 gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest font-mono">
-                Nexus RSVP // Orchestration System
-              </div>
-            </div>
             <h1 className="text-xl font-bold tracking-tight text-slate-900 uppercase">
               RSVP & Presensi Kegiatan
             </h1>
