@@ -121,14 +121,14 @@ export const DashboardList: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 mb-1.5">
               <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest font-mono">
-                Nexus RSVP // Orchestration System
+              <div className="text-xs font-semibold text-indigo-600 uppercase tracking-wider font-sans">
+                Sistem RSVP & Presensi Rapat
               </div>
             </div>
-            <h1 className="text-xl font-bold tracking-tight text-slate-900 uppercase">
-              RSVP & Presensi Kegiatan
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+              Daftar Kegiatan Rapat
             </h1>
-            <p className="text-xs text-slate-500">
+            <p className="text-sm text-slate-500">
               Sistem RSVP dan presensi kegiatan internal Kementerian Desa PDTT.
             </p>
           </div>
@@ -162,7 +162,7 @@ export const DashboardList: React.FC = () => {
         {isLoading && events.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 bg-white border border-slate-200 rounded-lg">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-slate-900 mb-4"></div>
-            <p className="text-xs text-slate-400 font-mono">MEMUAT DAFTAR KEGIATAN...</p>
+            <p className="text-sm text-slate-500 font-sans">Memuat daftar kegiatan...</p>
           </div>
         )}
 
@@ -197,17 +197,17 @@ export const DashboardList: React.FC = () => {
                       <h2 className="text-sm font-bold text-slate-900 leading-snug">
                         {evt.namaKegiatan}
                       </h2>
-                      <Badge
-                        variant={
-                          evt.jenisRapat === 'hybrid'
-                            ? 'purple'
-                            : evt.jenisRapat === 'daring'
-                            ? 'cyan'
-                            : 'warning'
-                        }
-                      >
-                        {evt.jenisRapat}
-                      </Badge>
+                      {evt.jenisRapat !== 'luring' && (
+                        <Badge
+                          variant={
+                            evt.jenisRapat === 'hybrid'
+                              ? 'purple'
+                              : 'cyan'
+                          }
+                        >
+                          {evt.jenisRapat}
+                        </Badge>
+                      )}
                     </div>
 
                     {/* Metadata */}
@@ -223,7 +223,7 @@ export const DashboardList: React.FC = () => {
                       {evt.lokasi.urlOnline && (
                         <div className="flex items-center gap-2">
                           <Video className="h-3.5 w-3.5 flex-shrink-0 text-slate-400" />
-                          <span className="truncate text-blue-600 font-mono text-[11px] underline">
+                          <span className="truncate text-blue-600 font-sans text-xs underline">
                             {evt.lokasi.urlOnline}
                           </span>
                         </div>
@@ -231,18 +231,18 @@ export const DashboardList: React.FC = () => {
                     </div>
 
                     {/* Quick Stats Grid */}
-                    <div className="grid grid-cols-3 gap-2 bg-slate-50/40 p-3 rounded-lg mb-6 border border-slate-205/65 text-center">
+                    <div className="grid grid-cols-3 gap-2 bg-slate-50/50 p-3 rounded-lg mb-6 border border-slate-200 text-center">
                       <div>
-                        <div className="text-[9px] uppercase font-semibold text-slate-450 font-mono tracking-wider">Diundang</div>
-                        <div className="text-base font-bold text-slate-800 font-mono mt-0.5">{totalInvited}</div>
+                        <div className="text-xs font-medium text-slate-500 font-sans">Diundang</div>
+                        <div className="text-lg font-bold text-slate-900 font-sans mt-0.5">{totalInvited}</div>
                       </div>
                       <div>
-                        <div className="text-[9px] uppercase font-semibold text-slate-450 font-mono tracking-wider">Konfirmasi</div>
-                        <div className="text-base font-bold text-slate-800 font-mono mt-0.5">{totalConfirmed}</div>
+                        <div className="text-xs font-medium text-slate-500 font-sans">Konfirmasi</div>
+                        <div className="text-lg font-bold text-slate-900 font-sans mt-0.5">{totalConfirmed}</div>
                       </div>
                       <div>
-                        <div className="text-[9px] uppercase font-semibold text-slate-450 font-mono tracking-wider">Hadir</div>
-                        <div className="text-base font-bold text-slate-800 font-mono mt-0.5">{totalAttended}</div>
+                        <div className="text-xs font-medium text-slate-500 font-sans">Hadir</div>
+                        <div className="text-lg font-bold text-slate-900 font-sans mt-0.5">{totalAttended}</div>
                       </div>
                     </div>
                   </div>
@@ -251,12 +251,12 @@ export const DashboardList: React.FC = () => {
                   <div className="border-t border-slate-100 pt-4 flex flex-col gap-2">
                     <div className="flex gap-2">
                       <Link to={`/dashboard/${evt.id}`} className="flex-1">
-                        <Button variant="outline" size="sm" className="w-full text-[10px] py-2 border-slate-250/70">
+                        <Button variant="outline" size="sm" className="w-full">
                           Dashboard
                         </Button>
                       </Link>
                       <Link to={`/checkin/${evt.id}`} className="flex-1">
-                        <Button variant="outline" size="sm" className="w-full text-[10px] py-2 border-slate-250/70">
+                        <Button variant="outline" size="sm" className="w-full">
                           Check-In Hari-H
                         </Button>
                       </Link>
@@ -264,7 +264,7 @@ export const DashboardList: React.FC = () => {
                     
                     <div className="flex gap-2 items-center">
                       <Link to={`/rsvp/${evt.id}`} target="_blank" className="flex-1">
-                        <Button variant="secondary" size="sm" className="w-full text-[10px] py-2 inline-flex items-center justify-center gap-1">
+                        <Button variant="secondary" size="sm" className="w-full inline-flex items-center justify-center gap-1">
                           Form RSVP Tamu
                           <ArrowRight className="h-3 w-3" />
                         </Button>
@@ -314,7 +314,7 @@ export const DashboardList: React.FC = () => {
                     />
 
                     <div>
-                      <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block mb-1.5">
+                      <label className="text-sm font-medium text-slate-700 block mb-1.5 font-sans">
                         Jenis Rapat
                       </label>
                       <div className="grid grid-cols-3 gap-2">
@@ -326,7 +326,7 @@ export const DashboardList: React.FC = () => {
                               setJenisRapat(type);
                               setFormError('');
                             }}
-                            className={`py-2 px-3 text-xs font-semibold rounded border transition-colors capitalize ${
+                            className={`py-2 px-3 text-sm font-medium rounded-lg border transition-colors capitalize ${
                               jenisRapat === type
                                 ? 'bg-slate-900 border-slate-900 text-white'
                                 : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
@@ -398,7 +398,7 @@ export const DashboardList: React.FC = () => {
                   </p>
 
                   <div className="bg-slate-50 border border-slate-200 rounded p-4 mb-6 text-left">
-                    <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+                    <span className="text-xs font-semibold text-slate-500 block mb-1 font-sans">
                       Link Form RSVP Publik
                     </span>
                     <div className="flex items-center gap-2">

@@ -121,7 +121,7 @@ export const GuestManagement: React.FC = () => {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center p-4">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-slate-900 mb-4"></div>
-        <p className="text-xs text-slate-450 font-mono">MEMUAT HALAMAN KELOLA TAMU...</p>
+        <p className="text-sm text-slate-500 font-sans">Memuat halaman kelola tamu...</p>
       </div>
     );
   }
@@ -134,7 +134,7 @@ export const GuestManagement: React.FC = () => {
         <div className="mb-4">
           <Link
             to={`/dashboard/${eventId}`}
-            className="inline-flex items-center gap-1.5 text-[10px] font-semibold text-slate-500 hover:text-slate-900 transition-colors uppercase tracking-widest font-mono"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors font-sans"
           >
             <ArrowLeft className="h-3 w-3" />
             Kembali ke Dashboard Kegiatan
@@ -143,11 +143,11 @@ export const GuestManagement: React.FC = () => {
 
         {/* Event Header Card */}
         <div className="bg-white border border-slate-200 rounded-lg shadow-xs p-6 mb-8">
-          <span className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest block mb-1.5 font-mono">
+          <span className="text-xs font-semibold text-slate-500 block mb-1.5 font-sans">
             Kegiatan Terpilih
           </span>
           <h1 className="text-lg font-bold text-slate-900 mb-1">{currentEvent.namaKegiatan}</h1>
-          <p className="text-xs text-slate-500 font-mono capitalize">
+          <p className="text-xs text-slate-500 font-sans capitalize">
             Jenis Rapat: {currentEvent.jenisRapat} | Lokasi: {currentEvent.lokasi.tempat}
           </p>
         </div>
@@ -160,10 +160,10 @@ export const GuestManagement: React.FC = () => {
               <div className="flex border-b border-slate-200 bg-slate-50/50">
                 <button
                   onClick={() => setActiveTab('manual')}
-                  className={`flex-1 py-3 text-[10px] font-bold uppercase tracking-wider border-r border-slate-200 flex items-center justify-center gap-1.5 transition-colors font-mono ${
+                  className={`flex-1 py-3 text-xs font-semibold uppercase tracking-wider border-r border-slate-200 flex items-center justify-center gap-1.5 transition-colors font-sans ${
                     activeTab === 'manual'
                       ? 'bg-white text-slate-900 border-b-2 border-b-slate-950'
-                      : 'text-slate-550 hover:text-slate-800'
+                      : 'text-slate-500 hover:text-slate-800'
                   }`}
                 >
                   <UserPlus className="h-3.5 w-3.5" />
@@ -171,10 +171,10 @@ export const GuestManagement: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setActiveTab('csv')}
-                  className={`flex-1 py-3 text-[10px] font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors font-mono ${
+                  className={`flex-1 py-3 text-xs font-semibold uppercase tracking-wider flex items-center justify-center gap-1.5 transition-colors font-sans ${
                     activeTab === 'csv'
                       ? 'bg-white text-slate-900 border-b-2 border-b-slate-955'
-                      : 'text-slate-550 hover:text-slate-800'
+                      : 'text-slate-500 hover:text-slate-800'
                   }`}
                 >
                   <Upload className="h-3.5 w-3.5" />
@@ -186,7 +186,7 @@ export const GuestManagement: React.FC = () => {
               <div className="p-5">
                 {activeTab === 'manual' ? (
                   <form onSubmit={handleManualSubmit} className="space-y-4">
-                    <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2 mb-3">
+                    <h3 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2 mb-3 font-sans">
                       Input Tamu Manual
                     </h3>
 
@@ -231,7 +231,7 @@ export const GuestManagement: React.FC = () => {
                   </form>
                 ) : (
                   <div className="space-y-4">
-                    <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-2">
+                    <h3 className="text-sm font-bold text-slate-900 border-b border-slate-100 pb-2 font-sans">
                       Impor Tamu Massal
                     </h3>
 
@@ -248,18 +248,18 @@ export const GuestManagement: React.FC = () => {
                       </div>
                     )}
 
-                    <div className="text-[11px] text-slate-500 leading-relaxed bg-slate-50 p-2.5 border border-slate-200 rounded space-y-1">
-                      <p className="font-semibold text-slate-600 flex items-center gap-1">
+                    <div className="text-xs text-slate-550 leading-relaxed bg-slate-50 p-2.5 border border-slate-200 rounded space-y-1 font-sans">
+                      <p className="font-semibold text-slate-650 flex items-center gap-1">
                         <HelpCircle className="h-3 w-3" /> Format Paste (Excel/CSV):
                       </p>
-                      <code className="block bg-slate-100 p-1 rounded font-mono text-[9px] text-slate-700 select-all">
+                      <code className="block bg-slate-100 p-1 rounded font-mono text-xs text-slate-700 select-all">
                         Nama, Jabatan, Instansi
                       </code>
                       <p>Atau copy langsung kolom tabel dari Ms. Excel / Google Sheets.</p>
                     </div>
 
                     <div>
-                      <label className="text-xs font-semibold text-slate-700 uppercase tracking-wider block mb-1">
+                      <label className="text-sm font-medium text-slate-700 block mb-1 font-sans">
                         Data CSV / Tabel Excel
                       </label>
                       <textarea
@@ -275,14 +275,14 @@ export const GuestManagement: React.FC = () => {
                         <div className="font-semibold text-slate-600 mb-1">
                           Pratinjau Impor ({csvPreview.length} Tamu)
                         </div>
-                        <div className="max-h-24 overflow-y-auto border border-slate-100 rounded text-[10px] divide-y bg-slate-50">
+                        <div className="max-h-24 overflow-y-auto border border-slate-100 rounded text-xs divide-y bg-slate-50 font-sans">
                           {csvPreview.slice(0, 5).map((item, idx) => (
                             <div key={idx} className="p-1 px-2 truncate">
                               <strong>{item.nama}</strong> - {item.jabatan} ({item.instansi})
                             </div>
                           ))}
                           {csvPreview.length > 5 && (
-                            <div className="p-1 px-2 text-[9px] text-slate-400 text-center">
+                            <div className="p-1 px-2 text-[10px] text-slate-400 text-center font-sans">
                               + {csvPreview.length - 5} tamu lainnya...
                             </div>
                           )}
@@ -309,7 +309,7 @@ export const GuestManagement: React.FC = () => {
           <div className="md:col-span-2">
             <div className="bg-white border border-slate-200 rounded-lg shadow-xs p-6">
               <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
-                <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                <h2 className="text-xs font-semibold text-slate-500 uppercase tracking-wider flex items-center gap-1.5 font-sans">
                   <Users className="h-4 w-4 text-slate-400" />
                   Daftar Tamu Terdaftar ({eventGuests.length})
                 </h2>
