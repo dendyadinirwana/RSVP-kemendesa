@@ -393,7 +393,7 @@ export const guestService = {
     return delay(guest);
   },
 
-  async checkInGuest(guestId: string): Promise<Guest> {
+  async checkInGuest(guestId: string, metodeOverride?: 'daring' | 'luring'): Promise<Guest> {
     const guests = getGuestsFromStore();
     const guest = guests.find((g) => g.id === guestId);
 
@@ -404,10 +404,14 @@ export const guestService = {
     guest.statusUndangan = 'hadir';
     guest.waktuCheckIn = new Date().toISOString();
     
-    // If they hadn't confirmed a method, default to luring (since check-in is physically on-site)
-    if (!guest.metodeKehadiran) {
+    // Set method of attendance. Override if explicit parameter passed,
+    // otherwise default to existing, or if none, 'luring'
+    if (metodeOverride) {
+      guest.metodeKehadiran = metodeOverride;
+    } else if (!guest.metodeKehadiran) {
       guest.metodeKehadiran = 'luring';
     }
+
     // If they hadn't confirmed RSVP status, auto confirm too
     if (!guest.waktuKonfirmasi) {
       guest.waktuKonfirmasi = guest.waktuCheckIn;

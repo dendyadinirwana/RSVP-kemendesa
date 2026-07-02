@@ -23,7 +23,7 @@ interface RSVPState {
     guestsData: Omit<Guest, 'id' | 'eventId' | 'statusUndangan' | 'metodeKehadiran' | 'waktuKonfirmasi' | 'waktuCheckIn'>[]
   ) => Promise<void>;
   submitRSVP: (eventId: string, response: RSVPResponse) => Promise<Guest>;
-  checkInGuest: (eventId: string, guestId: string) => Promise<void>;
+  checkInGuest: (eventId: string, guestId: string, metodeOverride?: 'daring' | 'luring') => Promise<void>;
   autoCheckInDaring: (eventId: string, guestId: string) => Promise<void>;
   resetDatabase: () => Promise<void>;
 }
@@ -175,10 +175,10 @@ export const useRSVPStore = create<RSVPState>((set, get) => ({
     }
   },
 
-  checkInGuest: async (eventId: string, guestId: string) => {
+  checkInGuest: async (eventId: string, guestId: string, metodeOverride?: 'daring' | 'luring') => {
     set({ isLoading: true, error: null });
     try {
-      const updatedGuest = await guestService.checkInGuest(guestId);
+      const updatedGuest = await guestService.checkInGuest(guestId, metodeOverride);
       set((state) => {
         const currentList = state.guests[eventId] || [];
         const updatedList = currentList.map((g) => (g.id === guestId ? updatedGuest : g));

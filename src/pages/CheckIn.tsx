@@ -43,10 +43,10 @@ export const CheckIn: React.FC = () => {
     );
   });
 
-  const handleCheckIn = async (guestId: string, name: string) => {
+  const handleCheckIn = async (guestId: string, name: string, metodeOverride?: 'daring' | 'luring') => {
     if (!eventId) return;
     try {
-      await checkInGuest(eventId, guestId);
+      await checkInGuest(eventId, guestId, metodeOverride);
       setSuccessMsg(`Berhasil check-in: ${name}`);
       setTimeout(() => setSuccessMsg(null), 3000);
       fetchGuests(eventId);
@@ -207,6 +207,25 @@ export const CheckIn: React.FC = () => {
                         <Button variant="secondary" size="sm" disabled className="text-xs">
                           Sudah Registrasi
                         </Button>
+                      ) : currentEvent.jenisRapat === 'hybrid' ? (
+                        <div className="flex gap-1.5">
+                          <Button
+                            onClick={() => handleCheckIn(guest.id, guest.nama, 'luring')}
+                            variant="primary"
+                            size="sm"
+                            className="text-xs bg-purple-600 hover:bg-purple-700 text-white border-purple-600 focus-visible:outline-purple-600"
+                          >
+                            Hadir Luring
+                          </Button>
+                          <Button
+                            onClick={() => handleCheckIn(guest.id, guest.nama, 'daring')}
+                            variant="primary"
+                            size="sm"
+                            className="text-xs bg-cyan-600 hover:bg-cyan-700 text-white border-cyan-600 focus-visible:outline-cyan-600"
+                          >
+                            Hadir Daring
+                          </Button>
+                        </div>
                       ) : (
                         <Button
                           onClick={() => handleCheckIn(guest.id, guest.nama)}
